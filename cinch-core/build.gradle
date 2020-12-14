@@ -1,0 +1,27 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../deps.gradle'
+
+
+
+repositories {
+	mavenLocal()
+	maven {
+		url = 'https://repo.maven.apache.org/maven2'
+	}
+}
+
+dependencies {
+	implementation deps.jackson.databind
+	implementation deps.jackson.annotations	
+    implementation deps.org.sql2o  
+	implementation deps.zitlab.fileprocessor  
+	implementation deps.org.ehcache
+	implementation deps.com.github.jsqlparser
+	implementation deps.org.sfm.jdbc
+	implementation deps.org.sfm.sql2o
+	
+	testImplementation deps.apache.commons.dbcp2
+}

@@ -1,0 +1,85 @@
+apply from: 'deps.gradle'
+ 
+allprojects {    
+    version = '0.1_alpha'
+}
+
+  
+allprojects {
+   gradle.projectsEvaluated {
+      tasks.withType(JavaCompile) {
+		  options.debug = project.hasProperty('dev')
+      }
+   }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'maven'
+	
+	group = 'com.carboneur.palmyra.cinch'
+	
+    repositories {
+        mavenLocal()
+        maven {
+            url = 'https://repo.maven.apache.org/maven2'
+        }
+    }
+    
+    dependencies {
+	    implementation deps.apache.log4j2.slf4j
+	    testImplementation group: 'org.testng', name: 'testng', version: '7.0.0'
+    }
+	
+    sourceCompatibility = '1.8'    
+    
+	test {
+	    useTestNG {
+	        preserveOrder true
+	    }
+	}
+}
+
+project(":cinch-base"){    
+}
+
+project(":cinch-dao"){
+	dependencies {
+		implementation project(":cinch-base")
+		implementation project(":cinch-dialect")		
+		}    
+}
+
+project(":cinch-schema"){
+	dependencies {
+		implementation project(":cinch-base")
+		implementation project(":cinch-dialect")
+		implementation project(":cinch-dbmd")
+		}    
+}
+
+project(":cinch-dialect"){
+    
+}
+
+project(":cinch-core"){
+    dependencies {
+    	implementation project(":cinch-dbmd")
+    	implementation project(":cinch-base")
+    	implementation project(":cinch-dao")
+    	implementation project(":cinch-dialect")
+    	implementation project(":cinch-schema")
+    }
+}
+
+project(":cinch-dbmd"){
+    dependencies {
+    	
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'xml-apis:xml-apis:1.0.b2'
+    }
+}

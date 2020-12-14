@@ -1,0 +1,39 @@
+
+plugins {    
+    id 'java-library'
+    id 'java'
+}
+
+
+dependencies {
+	implementation deps.apache.log4j2.slf4j
+	
+	testImplementation deps.org.testng
+}
+
+
+test {   
+   useTestNG(){
+   	useDefaultListeners = true
+   }
+	
+	failFast true
+//	systemProperty 'some.prop', 'value'
+
+//	include '**'
+//   exclude 'org/boo/**'
+
+   testLogging.showStandardStreams = true
+	
+ //	reports.html.enabled = false
+ 
+ //	testLogging {
+ //       events "PASSED", "FAILED", "SKIPPED"
+ //   }
+ 
+   minHeapSize = "128m"
+   maxHeapSize = "512m"
+
+//   jvmArgs '-XX:MaxPermSize=256m'
+    
+}

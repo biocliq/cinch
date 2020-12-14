@@ -1,0 +1,4 @@
+rootProject.name = 'cinch'
+
+include 'cinch-base','cinch-dialect', 'cinch-dbmd'
+include 'cinch-dao', 'cinch-core', 'cinch-schema'

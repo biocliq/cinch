@@ -13,3 +13,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 #-------------------------------------------------------------------------------
+All the base classes will be maintained here
+Tuple etc
+
+Base classes and reference interfaces will be maintained here. This package should not dependent on any other package

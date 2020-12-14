@@ -1,0 +1,11 @@
+
+plugins {
+    id 'java'
+}
+
+dependencies { 
+	implementation deps.apache.log4j2.slf4j
+	
+	implementation deps.apache.commons.dbcp2
+	implementation deps.jdbc.mariadb
+}
