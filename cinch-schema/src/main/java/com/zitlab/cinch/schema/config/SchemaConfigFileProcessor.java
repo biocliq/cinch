@@ -17,6 +17,7 @@ package com.zitlab.cinch.schema.config;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class SchemaConfigFileProcessor implements Processor {
 	@Override
 	public boolean process(String key, Path path) {
 		try {
+			path = Paths.get(path.toString()+key+".json");
 			TTCfg cfg = pageReader.readValue(path.toFile());
 			String filename = path.getFileName().toString();
 			String citype = filename.substring(0, filename.length() - 5);

@@ -1,29 +1,14 @@
-/*******************************************************************************
- * Copyright 2020 BioCliq Technologies
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
 package com.zitlab.cinch.schema.config;
 
 import java.util.HashMap;
 
-class TTCfg {
+public class TTCfg {
 	private String type;
 	private String option;
 	private HashMap<String, TTUniqueKey> uniqueKey;
 	private HashMap<String, TTChildCfg> children;
 	private HashMap<String, TTRelationCfg> relations;
-	private HashMap<String, TTReferenceCfg> references;
+	private HashMap<String, TTReferenceCfg> parents;
 	
 	public String getType() {
 		return type;
@@ -43,11 +28,12 @@ class TTCfg {
 	public void setRelations(HashMap<String, TTRelationCfg> relations) {
 		this.relations = relations;
 	}
-	public HashMap<String, TTReferenceCfg> getReferences() {
-		return references;
+	
+	public HashMap<String, TTReferenceCfg> getParents() {
+		return parents;
 	}
-	public void setReferences(HashMap<String, TTReferenceCfg> references) {
-		this.references = references;
+	public void setParents(HashMap<String, TTReferenceCfg> parents) {
+		this.parents = parents;
 	}
 	public HashMap<String, TTUniqueKey> getUniqueKey() {
 		return uniqueKey;

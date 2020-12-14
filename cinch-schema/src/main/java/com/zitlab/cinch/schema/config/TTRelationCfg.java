@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.zitlab.cinch.schema.config;
 
-class TTRelationCfg extends TTChildCfg{
+public class TTRelationCfg extends TTChildCfg{
 	private String[] target;
 
 	public String[] getTarget() {

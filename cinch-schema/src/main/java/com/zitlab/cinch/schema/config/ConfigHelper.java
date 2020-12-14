@@ -57,8 +57,8 @@ public class ConfigHelper  {
 					}
 				}
 
-				if (null != relation.getReferences()) {
-					for (Entry<String, TTReferenceCfg> parentCfg : relation.getReferences().entrySet()) {
+				if (null != relation.getParents()) {
+					for (Entry<String, TTReferenceCfg> parentCfg : relation.getParents().entrySet()) {
 						String relationName = parentCfg.getKey();
 						if (!setParent(relationName, parentCfg.getValue(), citype)) {
 							createParent(relationName, parentCfg.getValue(), citype, schema);
