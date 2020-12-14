@@ -22,6 +22,7 @@ dependencies {
 	implementation deps.com.github.jsqlparser
 	implementation deps.org.sfm.jdbc
 	implementation deps.org.sfm.sql2o
-	
+	implementation deps.jdbc.h2
+	implementation deps.jdbc.hsqldb
 	testImplementation deps.apache.commons.dbcp2
 }
