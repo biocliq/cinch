@@ -16,6 +16,8 @@
 package com.zitlab.palmyra.xdbmd.jdbc.plugin;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.function.Predicate;
 
 import com.zitlab.palmyra.xdbmd.jdbc.GenericMetaDataProvider;
@@ -30,5 +32,22 @@ public class H2MetaDataProvider extends GenericMetaDataProvider {
 	protected Predicate<String> getUrlPredicate() {
 		return connectionUrl -> (connectionUrl.startsWith("jdbc:h2:"));
 	}
+	/*
+	@Override
+	public ResultSet getTables(String schemaPattern, String tableNamePattern)
+			throws SQLException {
+		String _schemaPattern = (null == schemaPattern)  ? "%" : schemaPattern;
+	//	String _tablePattern = (null == tableNamePattern) ? "%" : tableNamePattern;		
+	//	System.out.println(_schemaPattern+" "+_tablePattern);
+		return query(H2Query.GET_TABLES, _schemaPattern);
+	}*/
+
+	public ResultSet getImportedKeys(String catalog, String schema, String table) throws SQLException {
+		String _schemaPattern = (null == schema)  ? "%" : schema;
+		String _tablePattern = (null == table) ? "%" : table;
+		return query(H2Query.GET_IMPORTED_KEYS, _schemaPattern,_tablePattern
+				);
+	}
+	
 
 }

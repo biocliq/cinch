@@ -1,0 +1,24 @@
+package com.zitlab.palmyra.xdbmd.jdbc.plugin;
+
+interface H2Query {
+	public static final String GET_TABLES ="select " + 
+			" T.TABLE_CATALOG as TABLE_CAT," + 
+			" T.TABLE_SCHEMA as TABLE_SCHEM," + 
+			" T.TABLE_NAME," + 
+			" T.TABLE_TYPE," + 
+			" T.REMARKS , " + 
+			" T.TYPE_NAME," + 
+			" (CASE WHEN (T.TYPE_NAME IS NOT NULL) THEN "+
+			" Database() ELSE NULL END) AS type_cat," + 
+			" (NULL) AS SELF_REFERENCING_COL_NAME," + 
+			" (NULL::character varying) AS REF_GENERATION" + 
+			" from INFORMATION_SCHEMA.TABLES T WHERE T.TABLE_SCHEMA LIKE ? ";
+	
+	
+	public static final String GET_IMPORTED_KEYS="SELECT f.PKTABLE_CATALOG as PKTABLE_CAT, f.PKTABLE_SCHEMA as PKTABLE_SCHEM, f.PKTABLE_NAME as PKTABLE_NAME,"
+			+ "f.PKCOLUMN_NAME, f.FKTABLE_CATALOG as FKTABLE_CAT, f.FKTABLE_SCHEMA as FKTABLE_SCHEM, f.FKTABLE_NAME, "
+			+ "f.FKCOLUMN_NAME, f.ORDINAL_POSITION as KEY_SEQ, f.UPDATE_RULE, f.DELETE_RULE, f.FK_NAME, f.PK_NAME, f.DEFERRABILITY "
+			+ "FROM INFORMATION_SCHEMA.CROSS_REFERENCES f WHERE f.PKTABLE_SCHEMA = ?"
+			+ "and f.PKTABLE_NAME = ?";
+	
+}
