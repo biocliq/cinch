@@ -7,7 +7,7 @@ def versions = [ spring: '5.2.4.RELEASE', spring_security: '5.2.1.RELEASE',
 	httpcomponents:'4.5.10',tika_core:'1.23',commons_codec:'1.13',
 	commons_email:'1.5', commons_io:"2.6", commons_lang3:"3.7",
 	xmlapi:"1.0.b2", tus_server:"1.0.0-2.0",tus_client:"0.4.1", 
-	testng:"7.3.0", jsqlparser:"3.1"]
+	testng:"7.3.0", jsqlparser:"3.1", sfm:"8.2.3"]
 
 
 
@@ -86,8 +86,9 @@ def org = [
 	groovy : "org.codehaus.groovy:groovy:${versions.groovy}",
 	quartz : "org.quartz-scheduler:quartz:${versions.quartz}",
 	sql2o : "org.sql2o:sql2o:${versions.sql2o}",
-	sfm : [ jdbc : "org.simpleflatmapper:sfm-jdbc:8.2.3", 
-		sql2o : "org.simpleflatmapper:sfm-sql2o:8.2.3"],
+	sfm : [ jdbc : "org.simpleflatmapper:sfm-jdbc:${versions.sfm}",
+		sql2o : "org.simpleflatmapper:sfm-sql2o:${versions.sfm}",
+		util : "org.simpleflatmapper:sfm-util:${versions.sfm}"],
 	tus : [client : "io.tus.java.client:tus-java-client:${versions.tus_client}",
 		server : "me.desair.tus:tus-java-server:${versions.tus_server}"],
 	xmlapi : "xml-apis:xml-apis:${versions.xmlapi}",
@@ -97,7 +98,9 @@ def org = [
 
 def jdbc = [mariadb:"org.mariadb.jdbc:mariadb-java-client:${versions.jdbc_mariadb}",
 	pgsql : "org.postgresql:postgresql:${versions.jdbc_pgsql}",
-	mssql : "com.microsoft.sqlserver:mssql-jdbc:${versions.jdbc_mssql}"
+	mssql : "com.microsoft.sqlserver:mssql-jdbc:${versions.jdbc_mssql}",
+	hsqldb : "org.hsqldb:hsqldb:2.5.1",
+	h2db: "com.h2database:h2:1.4.200"
 ]
 
 def javax = [

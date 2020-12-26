@@ -14,8 +14,10 @@ repositories {
 }
 
 dependencies {
+	implementation deps.jackson.databind
+	implementation deps.jackson.annotations	
 	implementation deps.com.github.jsqlparser
 	implementation deps.org.sfm.jdbc
-		
-	testImplementation deps.apache.commons.dbcp2
+	implementation deps.apache.commons.dbcp2
+	implementation deps.jdbc.mariadb
 }

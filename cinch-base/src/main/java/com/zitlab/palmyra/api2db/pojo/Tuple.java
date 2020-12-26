@@ -37,14 +37,11 @@ public interface Tuple extends Record, Serializable {
 
 	public default Object getNonNullValuesAsMap(String[] keys) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		Object value = null;
-		String key = null;
-		for (int i = 0; i < keys.length; i++) {
-			key = keys[i];
-			value = this.getAttribute(keys[i]);
-			if (null == value)
-				return null;
-			map.put(key, value);
+		Object value = null;		
+		for (String key: keys) {			
+			value = this.getAttribute(key);
+			if (null != value)				
+				map.put(key, value);
 		}
 		if (map.size() > 0)
 			return map;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.palmyra.cinch.tuple.queryhelper;
+package com.zitlab.palmyra.cinch;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -27,6 +27,7 @@ import com.zitlab.palmyra.cinch.mapper.ClassMapper;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
+import com.zitlab.palmyra.cinch.tuple.queryhelper.SelectQueryHelper;
 
 public class QueryBuilder {
 	private Class<?> clazz;
@@ -65,7 +66,6 @@ public class QueryBuilder {
 		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
-		System.out.println(params.getQuery());
 		return dao.select(params);
 	}
 	

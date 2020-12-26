@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,23 +76,6 @@ public class TupleImpl extends RecordImpl implements Tuple {
 
 	public Object getId() {
 		return this.id;
-	}
-
-	public Object getNonNullValuesAsMap(String[] keys) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		Object value = null;
-		String key = null;
-		for (int i = 0; i < keys.length; i++) {
-			key = keys[i];
-			value = this.getAttribute(keys[i]);
-			if (null == value)
-				return null;
-			map.put(key, value);
-		}
-		if (map.size() > 0)
-			return map;
-
-		return null;
 	}
 
 	public void setId(Object id) {

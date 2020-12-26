@@ -20,7 +20,6 @@ import javax.sql.DataSource;
 import com.zitlab.cinch.schema.Config;
 import com.zitlab.cinch.schema.ConfigFactory;
 import com.zitlab.cinch.schema.DefaultConfigFactory;
-import com.zitlab.palmyra.cinch.tuple.queryhelper.QueryBuilder;
 
 public class CinchORM {
 	private DataSource ds;

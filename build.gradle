@@ -62,13 +62,26 @@ project(":cinch-dialect"){
     
 }
 
+project ("cinch-examples"){
+    dependencies {
+    	implementation project(":cinch-orm")
+    	implementation project(":cinch-core")
+    }
+}
+
 project(":cinch-core"){
     dependencies {
-    	implementation project(":cinch-dbmd")
-    	implementation project(":cinch-base")
-    	implementation project(":cinch-dao")
-    	implementation project(":cinch-dialect")
-    	implementation project(":cinch-schema")
+    	api project(":cinch-dbmd")
+    	api project(":cinch-base")
+    	api project(":cinch-dao")
+    	api project(":cinch-dialect")
+    	api project(":cinch-schema")
+    }
+}
+
+project(":cinch-orm"){
+    dependencies {
+		implementation project(":cinch-core")
     }
 }
 

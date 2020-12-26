@@ -24,16 +24,8 @@ repositories {
 
 group = 'com.zitlab.palmyra.api2db'
 
-dependencies { 	
-	implementation deps.org.ehcache
+dependencies {
+
 	implementation deps.org.sfm.jdbc
-	implementation deps.org.sfm.sql2o
-	implementation deps.apache.commons.dbcp2
-	implementation deps.jdbc.mariadb
-	implementation deps.com.github.jsqlparser
-	implementation deps.jackson.databind
-	implementation deps.jackson.annotations	
-	implementation deps.zitlab.fileprocessor
-	compileOnly deps.org.sql2o
-	
+	implementation deps.org.sql2o	
 }

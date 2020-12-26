@@ -42,7 +42,6 @@ public class SelectQueryHelper extends AppendColumnHelper {
 			Tuple item = filter.getCriteria();
 
 			if (null != item) {
-				// addQueryCriteriaByField(item, type, query, rootTable, list);
 				// TODO experminal added for inclusion of parent references
 				addQueryCriteria(type.getName(), item, type, query, rootTable, list);
 			}
@@ -66,9 +65,6 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 	public QueryParams getSearchQuery(TupleType tupleType, TupleFilter filter) {
 
-//		if (logger.isTraceEnabled())
-//			logger.trace("Generating Search Query");
-//		
 		Tuple item = filter.getCriteria();
 		DataList valueList = new DataList();
 

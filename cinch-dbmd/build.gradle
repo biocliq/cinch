@@ -6,6 +6,6 @@ plugins {
 dependencies { 
 	implementation deps.apache.log4j2.slf4j
 	
-	implementation deps.apache.commons.dbcp2
-	implementation deps.jdbc.mariadb
+	testImplementation deps.apache.commons.dbcp2
+	testImplementation deps.jdbc.mariadb
 }
