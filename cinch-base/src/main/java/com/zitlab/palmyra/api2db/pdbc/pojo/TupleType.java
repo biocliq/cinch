@@ -291,7 +291,7 @@ public class TupleType {
 	public TupleType getReference(String field) {
 		int index = field.indexOf('.');
 		if (index < 0) {
-			return null;
+			return getForeignKeyTupleType(field);
 		} else {
 			String ref = field.substring(0, index);
 			return getForeignKeyTupleType(ref);
@@ -664,5 +664,9 @@ public class TupleType {
 			fkeyMap.put(fKey.getAlias(), fKey);
 		}
 		this.foreignKeyMap = fkeyMap;
+	}
+	
+	public String toString() {
+		return name;
 	}
 }

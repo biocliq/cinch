@@ -16,6 +16,10 @@ repositories {
 dependencies {
 	implementation deps.com.github.jsqlparser
 	implementation deps.org.sfm.jdbc
+	
+	implementation deps.jackson.databind
+	implementation deps.jackson.annotations
 		
 	testImplementation deps.apache.commons.dbcp2
+	
 }

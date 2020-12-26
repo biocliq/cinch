@@ -17,76 +17,29 @@ package com.zitlab.palmyra.cinch.tuple.resulthandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 import org.simpleflatmapper.util.CheckedConsumer;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
 import com.zitlab.palmyra.cinch.rshandler.RowCallbackHandler;
-import com.zitlab.palmyra.cinch.tuple.queryhelper.Column;
-import com.zitlab.palmyra.cinch.tuple.queryhelper.Table;
 
 /**
  * @author ksvraja
  *
  */
-public class TupleRowCallbackHandler implements RowCallbackHandler {
-	private Map<String, Table> tableMap;	
+public class TupleRowCallbackHandler extends TupleProcessor implements RowCallbackHandler {
+
 	private CheckedConsumer<Tuple> consumer;
-	private Table table;
-	private TupleType tupleType;
-
-	public void setTableCfg(TupleType tupleType, Map<String, Table> tableMap) {
-		this.tupleType = tupleType;
-		this.tableMap = tableMap;
-		String tupleTypeName = tupleType.getName();		
-		this.table = tableMap.get(tupleTypeName);
-		tableMap.remove(tupleTypeName);
-	}
+	private int attribMapSize = 16;
 	
-	public TupleRowCallbackHandler(CheckedConsumer<Tuple> rp, TupleType tt) {
+	public TupleRowCallbackHandler(CheckedConsumer<Tuple> rp) {
 		consumer = rp;
-		tupleType = tt;
 	}
 
-	private TupleImpl getItem(String ciType) {
-		TupleImpl tuple = new TupleImpl();// TupleCache.get();
-		tuple.setType(ciType);
-		return tuple;
-	}
-	
 	@Override
 	public void processRow(ResultSet rs) throws SQLException {
-		TupleImpl tuple = getItem(tupleType.getName());
-		tuple.setTupleType(tupleType);
-		Map<String, Object> attributes = tuple.getAttributes();
-		List<Column> columns = table.getColumns();
-		
-		for (Column col : columns) {
-			attributes.put(col.getAttribute(), col.getConverter().read(rs, col.getRsIndex()));
-		}
+		Tuple tuple = process(rs);
 
-		for (Table subTable : tableMap.values()) {
-			Map<String, Object> subAttributes;
-			List<Column> subCols = subTable.getColumns();
-			String reference;
-			String attReference;
-			if (subCols.size() > 0) {
-				reference = subTable.getReference();
-				attReference = reference.substring(reference.indexOf(".") + 1, reference.length());
-				Tuple subItem = getItem(subTable.getCiType());
-				subAttributes = subItem.getAttributes();
-				for(Column col: subCols) {
-					subAttributes.put(col.getAttribute(), col.getConverter().read(rs, col.getRsIndex()));
-				}
-				tuple.removeAttribute(attReference);
-				tuple.setReference(attReference, subItem);
-			}
-		}
-		
 		try {
 			consumer.accept(tuple);
 		} catch (Exception e) {
@@ -96,6 +49,10 @@ public class TupleRowCallbackHandler implements RowCallbackHandler {
 
 	@Override
 	public void processMetaData(ResultSet rs) throws SQLException {
-		// Simple definition, No implementation required
+		attribMapSize = rs.getMetaData().getColumnCount();
+	}
+	
+	public int getAttributeMapSize() {
+		return attribMapSize;
 	}
 }

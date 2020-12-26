@@ -38,8 +38,13 @@ public class ArrayConverter implements Converter<Array> {
 
 	@Override
 	public Array convert(Object obj) {
-		if (null != obj)
-			return (Array) obj;
+		if (null != obj) {
+			try {
+				return (Array) obj;
+			} catch (Throwable e) {
+				throw new ConverterException(obj.getClass() + " cannot be cast to Array");
+			}
+		}
 		return null;
 	}
 }

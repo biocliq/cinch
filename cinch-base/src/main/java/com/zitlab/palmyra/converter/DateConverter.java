@@ -42,7 +42,7 @@ public class DateConverter implements Converter<Date>{
 			return (Date) obj;
 		}
 		else {
-			throw new ConverterException(obj.getClass() + " cannot be cast to InputStream");
+			throw new ConverterException(obj.getClass() + " cannot be cast to Date");
 		}
 	}
 

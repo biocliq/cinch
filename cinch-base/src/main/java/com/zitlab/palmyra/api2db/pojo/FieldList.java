@@ -27,9 +27,21 @@ public interface FieldList {
 
 	public void setAttributes(List<String> attributes);
 
-	public void addRefField(String refernce, String field);
+	public void addParentField(String field);
 
 	public void addField(String field);
+	
+	public default void addFields(String... fields) {
+		for(String field: fields) {
+			addField(field);
+		}
+	}
+	
+	public default void addParentFields(String... fields) {
+		for(String field: fields) {
+			addParentField(field);
+		}
+	}
 
 	public HashMap<String, FieldList> getAllReferences();
 

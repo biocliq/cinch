@@ -132,7 +132,7 @@ public class ClauseHelper{
 	protected Table getSubTable(Query<Table> query, String schema, String table, String reference, String ciType) {		
 		Table subTable = query.getSubTable(reference);
 		if (null == subTable) {
-			subTable = new Table(schema, table, reference,ciType);
+			subTable = new Table(schema, table, ciType, reference);
 			query.addSubTable(subTable, reference);
 		}
 		return subTable;

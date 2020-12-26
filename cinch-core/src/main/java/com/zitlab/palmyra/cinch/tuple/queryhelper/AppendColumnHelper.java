@@ -38,9 +38,9 @@ import com.zitlab.palmyra.util.TextUtil;
 public class AppendColumnHelper extends QueryHelper {
 //	private static final Logger logger = LoggerFactory.getLogger(AppendColumnHelper.class);
 
-	protected void addQueryCriteria(String ref, Tuple criteria, TupleType tupleType, SelectQuery<Table> query, Table table,
-			DataList valueList) {
-		if(null == criteria)
+	protected void addQueryCriteria(String ref, Tuple criteria, TupleType tupleType, SelectQuery<Table> query,
+			Table table, DataList valueList) {
+		if (null == criteria)
 			return;
 		addQueryCriteriaByField(criteria, tupleType, query, table, valueList);
 		TupleType refType = null;
@@ -144,13 +144,14 @@ public class AppendColumnHelper extends QueryHelper {
 		}
 	}
 
-	protected final void addCriteria(SelectQuery<Table> query, DataList valueList, Table table, TupleAttribute attribute,
-			Object value) {
+	protected final void addCriteria(SelectQuery<Table> query, DataList valueList, Table table,
+			TupleAttribute attribute, Object value) {
 
 		query.addCondition(getCondition(table, attribute, value, valueList));
 	}
 
-	protected void appendColumnsToSelect(SelectQuery<Table> query, TupleType tupleType, Table rootTable, TupleFilter filter) {
+	protected void appendColumnsToSelect(SelectQuery<Table> query, TupleType tupleType, Table rootTable,
+			TupleFilter filter) {
 		List<String> fields = null;
 		FieldList fieldList = null;
 		HashMap<String, FieldList> referenceMap = null;
@@ -159,18 +160,23 @@ public class AppendColumnHelper extends QueryHelper {
 			fieldList = filter.getFields();
 			if (null != fieldList) {
 				fields = fieldList.getAttributes();
+				if (null != fields && 0 < fields.size()) {
+					appendColumns(query, tupleType, rootTable, fieldList, tupleType.getName());
+					return;
+				}
 				referenceMap = fieldList.getAllReferences();
+				if (null != referenceMap && 0 < referenceMap.size()) {
+					appendColumns(query, tupleType, rootTable, fieldList, tupleType.getName());
+					return;
+				}
 			}
 		}
 
-		if ((null != fields && 0 < fields.size()) || (null != referenceMap && 0 < referenceMap.size())) {
-			appendColumns(query, tupleType, rootTable, fieldList, tupleType.getName());
-		} else
-			appendAllColumns(tupleType.getName(), query, tupleType, rootTable, includeReference);
+		appendAllColumns(tupleType.getName(), query, tupleType, rootTable, includeReference);
 	}
 
 	private void appendAllColumns(String ref, SelectQuery<Table> query, TupleType tupleType, Table rootTable,
-			boolean includeReference){
+			boolean includeReference) {
 		TupleType subType = null;
 		Table subTable = null;
 		String alias = null;
@@ -192,7 +198,8 @@ public class AppendColumnHelper extends QueryHelper {
 
 				subType = fKey.getTargetType();
 				subTable = getSubTable(query, tupleType, alias);
-						//query.getSubTable(subType.getSchema(), subType.getTable(), alias, subType.getName());
+				// query.getSubTable(subType.getSchema(), subType.getTable(), alias,
+				// subType.getName());
 
 				for (Entry<String, TupleAttribute> subEntry : subType.getAllFields().entrySet()) {
 					subField = subEntry.getValue();
@@ -237,21 +244,24 @@ public class AppendColumnHelper extends QueryHelper {
 				fKey = tupleType.getForeignKey(key);
 				if (null != fKey) {
 					subType = fKey.getTargetType();
-					if (null != subType) {
-						sb.setLength(0);
-						TextUtil.appendAll(sb, reference, ".", key);
-						String nextRef = sb.toString();
-						subTable = getSubTable(query, subType, nextRef);
-								//query.getSubTable(subType.getSchema(), subType.getTable(), nextRef,	subType.getName());
-						FieldList list = entry.getValue();
-						addLeftOuterJoin(query, rootTable, tupleType, subTable, subType, fKey);
-						if (list.size() > 0) {
-							appendColumns(query, subType, subTable, list, nextRef);
-						} else {
-							appendAllColumns(nextRef, query, subType, subTable, false);
-						}
+
+					sb.setLength(0);
+					TextUtil.appendAll(sb, reference, ".", key);
+					String nextRef = sb.toString();
+					subTable = getSubTable(query, subType, nextRef);
+					// query.getSubTable(subType.getSchema(), subType.getTable(), nextRef,
+					// subType.getName());
+					FieldList list = entry.getValue();
+					addLeftOuterJoin(query, rootTable, tupleType, subTable, subType, fKey);
+					if (list.size() > 0) {
+						appendColumns(query, subType, subTable, list, nextRef);
+					} else {
+						appendAllColumns(nextRef, query, subType, subTable, false);
 					}
-				}
+				} else
+					throw new FieldValidationException(key, tupleType.getName(),
+							"Parent reference " + key + " is not found in the type " + tupleType.getName(),
+							Validation.MISSING_REFERENCE);
 			}
 		}
 	}

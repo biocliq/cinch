@@ -21,14 +21,18 @@ public class Table extends com.zitlab.palmyra.sqlbuilder.query.Table<Column>{
 
 	private String ciType;
 	
+	private String attReference;
+	
 	Table(String schema, String tableName, String ciType, String reference) {
 		super(schema, tableName, reference);
 		this.ciType = ciType;
+		attReference = reference.substring(reference.indexOf(".") + 1, reference.length());
 	}
 	
 	Table(String schema, String tableName, String ciType) {
 		super(schema, tableName, ciType);
 		this.ciType = ciType;
+		//this.attReference = ciType;
 	}
 
 	protected Column newColumn() {
@@ -44,4 +48,7 @@ public class Table extends com.zitlab.palmyra.sqlbuilder.query.Table<Column>{
 		return ciType;
 	}
 	
+	public String getAttributeReference() {
+		return attReference;
+	}
 }

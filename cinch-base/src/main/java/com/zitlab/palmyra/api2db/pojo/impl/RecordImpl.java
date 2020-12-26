@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.zitlab.palmyra.api2db.pojo.Record;
-import com.zitlab.palmyra.ds.ArrayMap;
 import com.zitlab.palmyra.util.QueryTimer;
 
 public abstract class RecordImpl implements Record{
@@ -35,18 +34,16 @@ public abstract class RecordImpl implements Record{
 	
 	public RecordImpl() {
 		this.attributes = new HashMap<String, Object>(32);
-//		this.attributes = new ArrayMap<Object>(32);
 	}
 
-	public RecordImpl(int attrMapSize) {
-//		this.attributes = new HashMap<String, Object>(attrMapSize);
-		this.attributes = new ArrayMap<Object>(32);
+	public RecordImpl(int attrSize) {
+		int mapSize = attrSize << 1;
+		this.attributes = new HashMap<String, Object>(mapSize);
 	}
 	
 	public RecordImpl(String type) {
 		this.type = type;
-//		this.attributes = new HashMap<String, Object>(32);
-		this.attributes = new ArrayMap<Object>(32);
+		this.attributes = new HashMap<String, Object>(32);
 	}
 
 	public final String getType() {

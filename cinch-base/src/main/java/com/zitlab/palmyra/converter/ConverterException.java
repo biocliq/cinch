@@ -15,7 +15,9 @@
  ******************************************************************************/
 package com.zitlab.palmyra.converter;
 
-public class ConverterException extends RuntimeException{
+import com.zitlab.palmyra.api2db.exception.CodedException;
+
+public class ConverterException extends CodedException{
 
 	private static final long serialVersionUID = 8772752616109842229L;
 	

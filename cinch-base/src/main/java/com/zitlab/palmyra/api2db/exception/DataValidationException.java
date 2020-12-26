@@ -22,7 +22,7 @@ import com.zitlab.palmyra.api2db.pojo.Record;
  * @author ksvraja
  *
  */
-public class DataValidationException extends RuntimeException{
+public class DataValidationException extends CodedException{
 	private static final long serialVersionUID = 1L;
 
 	private int errorCode = 0;
@@ -47,8 +47,8 @@ public class DataValidationException extends RuntimeException{
 		this.errorCode = reason.getCode();
 	}
 	
-	public int getErrorCode() {
-		return errorCode;
+	public String getErrorCode() {
+		return errorCode + "";
 	}
 		
 	public String getFieldName() {

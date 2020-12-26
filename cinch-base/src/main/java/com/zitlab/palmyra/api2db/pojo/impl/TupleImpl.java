@@ -49,9 +49,9 @@ public class TupleImpl extends RecordImpl implements Tuple {
 
 	private String error;
 
-	protected Map<String, Tuple> parent = new LinkedHashMap<String, Tuple>();
+	protected Map<String, Tuple> parentMap = new LinkedHashMap<String, Tuple>();
 
-	protected Map<String, List<Tuple>> children = new LinkedHashMap<String, List<Tuple>>();
+	protected Map<String, List<Tuple>> childrenMap = new LinkedHashMap<String, List<Tuple>>();
 
 	private Tuple dbTuple;
 
@@ -74,6 +74,11 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		this.id = id;
 	}
 
+	public TupleImpl(String type, int attCount) {
+		super(attCount);
+		super.type = type;
+	}
+
 	public Object getId() {
 		return this.id;
 	}
@@ -83,52 +88,52 @@ public class TupleImpl extends RecordImpl implements Tuple {
 	}
 
 	public Map<String, Tuple> getParent() {
-		return parent;
+		return parentMap;
 	}
 
 	public Tuple getParent(String key) {
-		return parent.get(key);
+		return parentMap.get(key);
 	}
 
 	public void setParent(Map<String, Tuple> parent) {
-		this.parent = parent;
+		this.parentMap = parent;
 	}
 
 	public void addParent(String key, Tuple value) {
-		this.parent.put(key, value);
+		this.parentMap.put(key, value);
 	}
 
 	public void removeParent(String key) {
-		this.parent.remove(key);
+		this.parentMap.remove(key);
 	}
 
 	public Map<String, List<Tuple>> getChildren() {
-		return children;
+		return childrenMap;
 	}
 
 	public List<Tuple> getChildren(String key) {
-		return children.get(key);
+		return childrenMap.get(key);
 	}
 
 	public void setChildren(Map<String, List<Tuple>> children) {
-		this.children = children;
+		this.childrenMap = children;
 	}
 
 	public void addChildren(String key, Tuple tuple) {
-		List<Tuple> childList = children.get(key);
+		List<Tuple> childList = childrenMap.get(key);
 		if (null != childList) {
 			childList.add(tuple);
 			return;
 		} else {
 			childList = new ArrayList<Tuple>();
-			children.put(key, childList);
+			childrenMap.put(key, childList);
 			childList.add(tuple);
 		}
 	}
 
 	public void setChildren(String key, List<Tuple> tuples) {
-		children.remove(key);
-		children.put(key, tuples);
+		childrenMap.remove(key);
+		childrenMap.put(key, tuples);
 	}
 
 	public TupleMetaInfo getMetainfo() {
@@ -151,51 +156,50 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		this.dbExists = dbExists;
 	}
 
-	public void setReference(String field, Tuple tuple) {
+	public void setParent(String field, Tuple tuple) {
 		int index = field.indexOf('.');
 		if (index < 0) {
-			Tuple reference = parent.get(field);
-			if (null == reference) {
-				this.parent.put(field, tuple);
+			Tuple parent = parentMap.get(field);
+			if (null == parent) {
+				this.parentMap.put(field, tuple);
 			} else {
-				reference.getAttributes().putAll(tuple.getAttributes());
-				reference.getParent().putAll(tuple.getParent());
-				reference.getChildren().putAll(tuple.getChildren());
+				parent.getAttributes().putAll(tuple.getAttributes());
+				parent.getParent().putAll(tuple.getParent());
+				parent.getChildren().putAll(tuple.getChildren());
 			}
 		} else {
 			String ref = field.substring(0, index);
 			String _field = field.substring(index + 1);
-			Tuple reference = parent.get(ref);
-			if (null == reference) {
-				reference = new TupleImpl();
-				parent.put(ref, reference);
+			Tuple parent = parentMap.get(ref);
+			if (null == parent) {
+				parent = new TupleImpl();
+				parentMap.put(ref, parent);
 			}
-			reference.setReference(_field, tuple);
+			parent.setParent(_field, tuple);
 		}
 	}
 
 	public void setParentAttribute(String ref, String field, Tuple value) {
-
-		Tuple reference = parent.get(ref);
-		if (null == reference) {
-			reference = new TupleImpl();
-			parent.put(ref, reference);
+		Tuple parent = parentMap.get(ref);
+		if (null == parent) {
+			parent = new TupleImpl();
+			parentMap.put(ref, parent);
 		}
-		reference.setParentAttribute(field, value);
+		parent.setParentAttribute(field, value);
 	}
 
 	@Override
-	public void setParentAttribute(String field, Tuple value) {
+	public void setParentAttribute(String field, Object value) {
 		int index = field.indexOf('.');
 		if (index > 0) {
 			String ref = field.substring(0, index);
 			String _field = field.substring(index + 1);
-			Tuple reference = parent.get(ref);
-			if (null == reference) {
-				reference = new TupleImpl();
-				parent.put(ref, reference);
+			Tuple parent = parentMap.get(ref);
+			if (null == parent) {
+				parent = new TupleImpl();
+				parentMap.put(ref, parent);
 			}
-			reference.setParentAttribute(_field, value);
+			parent.setParentAttribute(_field, value);
 		} else {
 			this.setAttribute(field, value);
 		}
@@ -206,11 +210,11 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		if (index > 0) {
 			String ref = field.substring(0, index);
 			String _field = field.substring(index + 1);
-			Tuple reference = parent.get(ref);
-			if (null == reference) {
+			Tuple parent = parentMap.get(ref);
+			if (null == parent) {
 				return null;
 			}
-			return reference.getParentAttribute(_field);
+			return parent.getParentAttribute(_field);
 		} else {
 			return this.getAttribute(field);
 		}
@@ -225,21 +229,17 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		this.dbExists = (null != dbTuple);
 	}
 
-	public Tuple getReference(String name) {
-		return parent.get(name);
-	}
-
 	@Override
 	public Object removeParentAttribute(String attribute) {
 		int index = attribute.indexOf('.');
 		if (index > 0) {
 			String ref = attribute.substring(0, index);
 			String _field = attribute.substring(index + 1);
-			Tuple reference = parent.get(ref);
-			if (null == reference) {
+			Tuple parent = parentMap.get(ref);
+			if (null == parent) {
 				return null;
 			}
-			return reference.removeParentAttribute(_field);
+			return parent.removeParentAttribute(_field);
 		} else
 			return this.removeAttribute(attribute);
 	}
@@ -249,7 +249,7 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		id = aInputStream.readObject();
 		type = aInputStream.readUTF();
 		attributes = (Map<String, Object>) aInputStream.readObject();
-		parent = (Map<String, Tuple>) aInputStream.readObject();
+		parentMap = (Map<String, Tuple>) aInputStream.readObject();
 		preferredKey = (String) aInputStream.readObject();
 	}
 
@@ -257,7 +257,7 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		aOutputStream.writeObject(id);
 		aOutputStream.writeUTF(type);
 		aOutputStream.writeObject(attributes);
-		aOutputStream.writeObject(parent);
+		aOutputStream.writeObject(parentMap);
 		aOutputStream.writeObject(preferredKey);
 	}
 
@@ -286,8 +286,8 @@ public class TupleImpl extends RecordImpl implements Tuple {
 		this.error = null;
 		this.attributes.clear();
 		this.preferredKey = null;
-		this.parent.clear();
-		this.children.clear();
+		this.parentMap.clear();
+		this.childrenMap.clear();
 		this.dbTuple = null;
 		this.dbExists = false;
 		this.id = null;

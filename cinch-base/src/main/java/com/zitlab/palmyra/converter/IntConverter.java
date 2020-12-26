@@ -43,7 +43,7 @@ public class IntConverter implements Converter<Integer>{
 			try {
 				return Integer.valueOf(obj.toString());
 			} catch (Throwable e) {
-				throw new ConverterException(" Error while converting to Boolean, provided value:" + obj, e);
+				throw new ConverterException(" Error while converting to Int, provided value:" + obj, e);
 			}
 		}
 	}

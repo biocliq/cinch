@@ -40,6 +40,7 @@ import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogger;
 import com.zitlab.palmyra.cinch.dao.RecordDao;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
 import com.zitlab.palmyra.cinch.security.AccessVerifier;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.DeleteQueryHelper;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.InsertQueryHelper;
@@ -55,17 +56,34 @@ public class TupleDao extends RecordDao {
 	private Config config;
 	private AccessVerifier accessVerifier;
 	private String user;
+	private TupleFactory tupleFactory;
 
 	public TupleDao(Config config, DataSource ds, String user) {
 		super(new QueryFactory(ds));
 		this.config = config;
 		this.user = user;
+		this.tupleFactory = TupleFactory.NOOP;
 	}
 
 	public TupleDao(Config config, QueryFactory queryFactory, String user) {
 		super(queryFactory);
 		this.config = config;
 		this.user = user;
+		this.tupleFactory = TupleFactory.NOOP;
+	}
+	
+	public TupleDao(Config config, DataSource ds, String user, TupleFactory tupleFactory) {
+		super(new QueryFactory(ds));
+		this.config = config;
+		this.user = user;
+		this.tupleFactory = tupleFactory;
+	}
+
+	public TupleDao(Config config, QueryFactory queryFactory, String user, TupleFactory tupleFactory) {
+		super(queryFactory);
+		this.config = config;
+		this.user = user;
+		this.tupleFactory = tupleFactory;
 	}
 
 	public TupleType getTableCfg(String type) {
@@ -86,13 +104,13 @@ public class TupleDao extends RecordDao {
 
 	public ResultSetHandler<Tuple> getHandler(TupleType type, Map<String, Table> tableMap) {
 		TupleResultSetHandler handler = new TupleResultSetHandler();
-		handler.setTableCfg(type, tableMap);
+		handler.setTableCfg(type, tableMap, tupleFactory);
 		return handler;
 	}
 
 	private TupleRowCallbackHandler getHandler(TupleType type, Map<String, Table> tableMap, ResultProcessor<Tuple> rp) {
-		TupleRowCallbackHandler handler = new TupleRowCallbackHandler(rp, type);
-		handler.setTableCfg(type, tableMap);
+		TupleRowCallbackHandler handler = new TupleRowCallbackHandler(rp);
+		handler.setTableCfg(type, tableMap, tupleFactory);
 		return handler;
 	}
 

@@ -8,9 +8,8 @@
 
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
-    id 'java'
-	id 'maven'
+    id 'java-library'
+	id 'maven-publish'
 }
 
 apply from: '../deps.gradle'
@@ -21,8 +20,6 @@ repositories {
 		url = 'https://repo.maven.apache.org/maven2'
 	}
 }
-
-group = 'com.zitlab.palmyra.api2db'
 
 dependencies {
 

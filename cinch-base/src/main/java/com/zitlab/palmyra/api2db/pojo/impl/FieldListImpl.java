@@ -44,30 +44,19 @@ public class FieldListImpl implements FieldList{
 		}
 	}
 
-	public void addRefField(String refernce, String field) {
+	public void addParentField(String refernce, String field) {
 		FieldList fieldList = reference.get(refernce);
 		if (null == fieldList) {
 			fieldList = new FieldListImpl();
 			reference.put(refernce, fieldList);
 		}
-		fieldList.addField(field);
+		fieldList.addParentField(field);
 	}
 
 	public void addField(String field) {
-		int index = field.indexOf('.');
-		if (index < 0) {
-			if(!this.attributes.contains(field))
-				this.attributes.add(field);
-		} else {
-			String ref = field.substring(0, index);
-			String _field = field.substring(index + 1);
-			FieldList fieldList = reference.get(ref);
-			if (null == fieldList) {
-				fieldList = new FieldListImpl();
-				reference.put(ref, fieldList);
-			}
-			fieldList.addField(_field);
-		}
+		if(!this.attributes.contains(field))
+			this.attributes.add(field);
+		
 	}
 
 	@Override
@@ -83,5 +72,22 @@ public class FieldListImpl implements FieldList{
 	@Override
 	public FieldList getReference(String key) {
 		return reference.get(key);
+	}
+
+	@Override
+	public void addParentField(String field) {
+		int index = field.indexOf('.');
+		if (index < 0) {
+			this.addField(field);
+		} else {
+			String ref = field.substring(0, index);
+			String _field = field.substring(index + 1);
+			FieldList fieldList = reference.get(ref);
+			if (null == fieldList) {
+				fieldList = new FieldListImpl();
+				reference.put(ref, fieldList);
+			}
+			fieldList.addParentField(_field);
+		}		
 	}
 }

@@ -48,8 +48,26 @@ public interface Tuple extends Record, Serializable {
 		return null;
 	}
 	
-	public static Tuple newInstance() {
+	public static Tuple of() {
 		return new TupleImpl();
+	}
+
+	public static Tuple of(String type) {		
+		return new TupleImpl(type);
+	}
+
+	public static Tuple of(String type, int attCount) {		
+		return new TupleImpl(type, attCount);
+	}
+
+	public static Tuple instance(String type, Object id) {		
+		Tuple tuple = new TupleImpl(type);
+		tuple.setId(id);
+		return tuple;
+	}
+	
+	public static Tuple of(int attCount) {		
+		return new TupleImpl(attCount);
 	}
 
 	public Object getId();
@@ -76,16 +94,32 @@ public interface Tuple extends Record, Serializable {
 
 	public void setChildren(String key, List<Tuple> tuples);
 
-	public void setReference(String field, Tuple tuple);
+	@Deprecated(forRemoval = true)
+	public default void setReference(String field, Tuple tuple) {
+		setParent(field, tuple);
+	}
+	
+	public void setParent(String field, Tuple tuple);
 
 	public void setParentAttribute(String ref, String field, Tuple value);
 
-	public void setParentAttribute(String field, Tuple value);
+	public void setParentAttribute(String field, Object value);
+	
+	@Deprecated(forRemoval = true)
+	public default void setRefAttribute(String field, Object value) {
+		this.setParentAttribute(field, value);
+	}
 
 	public Object getParentAttribute(String field);
+	
+	@Deprecated(forRemoval = true)
+	public default Object getRefAttribute(String field) {
+		return this.getParentAttribute(field);
+	}
 
 	public Object removeParentAttribute(String field);
 
+	@Deprecated(forRemoval = true)
 	public default Tuple getReference(String name) {
 		return getParent(name);
 	}
@@ -95,10 +129,6 @@ public interface Tuple extends Record, Serializable {
 	public void setPreferredKey(String preferredKey);
 	
 	public void clear();
-
-	public static Tuple newInstance(String type) {		
-		return new TupleImpl(type);
-	}
 
 	public boolean isDbExists();
 	
