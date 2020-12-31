@@ -25,9 +25,9 @@ import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.sqlbuilder.condition.BetweenCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.BinaryCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
 import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.condition.Operator;
-import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
 
 public abstract class QueryHelper extends JoinHelper {
 

@@ -23,18 +23,18 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.cinch.schema.Config;
 import com.zitlab.palmyra.api2db.exception.GenericValidation;
 import com.zitlab.palmyra.api2db.exception.Validation;
 import com.zitlab.palmyra.api2db.pdbc.pojo.ForeignKey;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleRelation;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
+import com.zitlab.palmyra.api2db.schema.Schema;
 
 public class ConfigHelper  {
 	private static final Logger logger = LoggerFactory.getLogger(ConfigHelper.class);
 	
-	public Config mergeAdditionalConfig(Config schema, List<TTCfg> relations) {
+	public Schema mergeAdditionalConfig(Schema schema, List<TTCfg> relations) {
 		
 		for (TTCfg relation : relations) {
 			String name = relation.getType();
@@ -83,7 +83,7 @@ public class ConfigHelper  {
 		return schema;
 	}
 
-	private void verifyKey(String keyName, TTUniqueKey value, TupleType citype, Config schema) {
+	private void verifyKey(String keyName, TTUniqueKey value, TupleType citype, Schema schema) {
 		TupleAttribute attrib ;
 		String[] fields = value.getFields();
 		int size = fields.length;
@@ -108,7 +108,7 @@ public class ConfigHelper  {
 		}
 	}
 
-	private void createParent(String relationName, TTReferenceCfg value, TupleType citype, Config schema) {
+	private void createParent(String relationName, TTReferenceCfg value, TupleType citype, Schema schema) {
 		logger.info("Creating parent relation {} for citype {} with target{}", relationName, citype.getName(),
 				value.getType());
 
@@ -154,7 +154,7 @@ public class ConfigHelper  {
 		citype.addForeignKey(relationName, fKey);
 	}
 
-	private TupleRelation getChild(String relation, TTChildCfg cfg, TupleType parent, Config schema) {
+	private TupleRelation getChild(String relation, TTChildCfg cfg, TupleType parent, Schema schema) {
 		String[] src = cfg.getSource();
 		String type = cfg.getType();
 		TupleType ciType = schema.getTableCfg(type);
@@ -166,7 +166,7 @@ public class ConfigHelper  {
 		}		
 	}
 	
-	private TupleRelation createChild(String relationName, TTChildCfg value, TupleType parent, Config schema) {
+	private TupleRelation createChild(String relationName, TTChildCfg value, TupleType parent, Schema schema) {
 		logger.info("Creating child relation {} for citype {} with target{}", relationName, parent.getName(),
 				value.getType());
 
@@ -209,7 +209,7 @@ public class ConfigHelper  {
 		return new TupleRelation(relationName, tgtType, fKey, null);
 	}
 
-	private TupleRelation getRelation(String relation, TTRelationCfg cfg, Config schema) {
+	private TupleRelation getRelation(String relation, TTRelationCfg cfg, Schema schema) {
 		String[] src = cfg.getSource();
 		String[] tgt = cfg.getTarget();
 		String type = cfg.getType();

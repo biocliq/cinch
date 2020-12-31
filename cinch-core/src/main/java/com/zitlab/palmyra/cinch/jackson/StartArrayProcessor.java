@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleRelation;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
 
 public class StartArrayProcessor implements TokenProcessor {
 
@@ -15,12 +14,12 @@ public class StartArrayProcessor implements TokenProcessor {
 	public void process(JsonParser parser, ParserContext context) throws IOException {
 		TupleContext ctx = context.get();
 		TupleType tupleType = ctx.getTupleType();
-		TupleImpl tuple = ctx.getTuple();
+		Tuple tuple = ctx.getTuple();
 		TupleType childType = null;
 
 		String childKey = context.getFieldKey();
 		ArrayList<Tuple> childArray = new ArrayList<Tuple>();
-		TupleImpl child = context.newTuple();
+		Tuple child = context.newTuple();
 		TupleRelation relation;
 
 		if (null != tupleType) {

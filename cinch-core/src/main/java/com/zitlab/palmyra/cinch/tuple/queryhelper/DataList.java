@@ -16,6 +16,7 @@
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
@@ -77,5 +78,38 @@ public class DataList extends ArrayList<Object> {
 
 	public void addDateTime(Timestamp timestamp) {
 		super.add(timestamp);
+	}
+	
+	public static String getType(int dataType) {
+		switch (dataType) {
+		case Types.CHAR:
+		case Types.VARCHAR:
+		case Types.LONGNVARCHAR:
+			return "string";
+
+		case Types.DECIMAL:
+			return "decimal";
+		case Types.FLOAT:
+			return "float";
+		case Types.INTEGER:
+		case Types.NUMERIC:
+			return "int";
+		case Types.BIGINT:
+			return "long";
+		case Types.BIT:
+			return "bit";
+		case Types.BOOLEAN:
+			return "boolean";
+		case Types.TIMESTAMP:
+			return "timestamp";
+		case Types.TIMESTAMP_WITH_TIMEZONE:
+			return "timestampz";
+		case Types.TIME:
+			return "time";
+		case Types.DATE:
+			return "date";
+		default:
+			return "string";
+		}
 	}
 }

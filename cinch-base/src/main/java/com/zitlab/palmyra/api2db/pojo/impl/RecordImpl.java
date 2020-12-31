@@ -18,6 +18,7 @@ package com.zitlab.palmyra.api2db.pojo.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zitlab.palmyra.api2db.pojo.Action;
 import com.zitlab.palmyra.api2db.pojo.Record;
 import com.zitlab.palmyra.util.QueryTimer;
 
@@ -26,7 +27,7 @@ public abstract class RecordImpl implements Record{
 
 	protected String subType;
 
-	protected Integer actionCode;
+	protected Integer actionCode = Action.NONE;
 
 	protected String error;
 		
@@ -105,6 +106,20 @@ public abstract class RecordImpl implements Record{
 	
 	public final void setError(String error) {
 		this.error = error;
-	}	
+	}
+	
+
+	@Override
+	public void setActionCode(Integer action) {
+		if(null != action)
+			this.actionCode =action;
+		else
+			this.actionCode = Action.NONE;
+	}
+	
+	@Override
+	public Integer getActionCode() {
+		return actionCode;
+	}
 }
 

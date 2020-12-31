@@ -24,9 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.zitlab.palmyra.api2db.pojo.GenericItem;
+import com.zitlab.palmyra.api2db.pojo.NativeQuery;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.api2db.pojo.TupleResultSet;
-import com.zitlab.palmyra.cinch.dao.NativeQuery;
 import com.zitlab.palmyra.cinch.dao.RecordDao;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.rshandler.ListHandler;
@@ -50,6 +50,12 @@ public class NativeQueryDao extends RecordDao {
 		if(logger.isTraceEnabled())
 			logger.trace("Executing query {}, parameters:{}", query.getQuery(), query.getParams());
 		return select(query, new GenericResultHandler());
+	}
+	
+	public List<GenericItem> list(String query, Object... params) {
+		if(logger.isTraceEnabled())
+			logger.trace("Executing query {}, parameters:{}", query, params);
+		return select(query, new GenericResultHandler(), params);
 	}
 	
 	public void list(NativeQuery query, CheckedConsumer<Tuple> rp) throws IOException {

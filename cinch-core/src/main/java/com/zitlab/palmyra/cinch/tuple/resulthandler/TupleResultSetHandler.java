@@ -20,7 +20,6 @@ import java.sql.SQLException;
 
 import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
-import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
 
 /**
  * @author ksvraja

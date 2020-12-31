@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ import com.zitlab.palmyra.api2db.exception.Validation;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogHelper;
 import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogger;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
@@ -40,17 +42,19 @@ public class UpdateQueryHelper extends QueryHelper {
 
 	private Set<String> excludeFields;
 	private ChangeLogger auditLogger;
-	private boolean excludeCheckRequired = false;
+	private BiConsumer<String, String> verifier;
 
 	public UpdateQueryHelper(Set<String> excludeFields, ChangeLogger auditLogger) {
 		this.excludeFields = excludeFields;
 		this.auditLogger = auditLogger;
-		this.excludeCheckRequired = (null != excludeFields );
+		this.verifier = (null == excludeFields || 0 == excludeFields.size()) ? NoopVerifier.instance()
+				: new ExcludeVerifier();
 	}
 
 	public QueryParams getUpdateQueryByID(TupleType tupleType, Tuple item, Tuple dbItem, String currentUser,
-			Dialect dialect, TupleDao dao) {
-
+			SchemaFactory configFactory, TupleDao dao) {
+		Dialect dialect = configFactory.getConfig().getDialect();
+		
 		if (null != item.getId()) {
 			Table table = new Table(tupleType.getSchema(), tupleType.getTable(), tupleType.getName());
 			UpdateQuery<Table> query = new UpdateQuery<Table>(table,tupleType.getName(),dialect);
@@ -122,35 +126,29 @@ public class UpdateQueryHelper extends QueryHelper {
 			tupleAttribute = fieldMap.get(key);
 			if (null == tupleAttribute) {
 				continue;
-//				throw new FieldValidationException(key, tableName,
-//						"Attribute `" + key + "` not mapped to any table in `" + tableName + "`",
-//						Validation.INVALID_ATTRIBUTE);
 			}
 
 			dataType = tupleAttribute.getDataType();
 			fieldName = tupleAttribute.getColumnName();
 
-			if (null == inValue && tupleAttribute.isMandatory()) {
-				throw new FieldValidationException(key, tupleType.getName(),
-						"Mandatory parameter `" + key + "` is missing for the CI Type `" + tupleType.getName() + "`",
-						Validation.MANDATORY);
-			}
-
+			tupleAttribute.checkMandatory(tupleType.getName(), inValue);
+			
 			if (valueList.isDifferent(tupleAttribute.getColumnName(), inValue, dbValue, tupleAttribute.getConverter())) {
-				if (excludeCheckRequired)
-					checkExclude(key, inValue, tupleType);
+				verifier.accept(tupleType.getName(), fieldName);				
 				table.addColumn(tupleAttribute);
 				valueList.add(inValue, tupleAttribute);
 				auditHelper.addLog(auditLogger, fieldName, dataType, inValue, dbValue);
 			}
 		}
 	}
-
-	private void checkExclude(String fieldName, Object value, TupleType type) {
-		if (excludeFields.contains(fieldName)) {
-			throw new FieldValidationException(fieldName, type.getName(),
-					"Non Updatable field '" + fieldName + "' in the request with value '" + value + "'",
-					Validation.NON_MODIFIABLE);
+	
+	private class ExcludeVerifier implements BiConsumer<String, String> {
+		@Override
+		public void accept(String type, String fieldName) {
+			if (excludeFields.contains(fieldName)) {
+				throw new FieldValidationException(fieldName,type,  "Non Insertable field " + fieldName,
+						Validation.NON_INSERTABLE);
+			}
 		}
 	}
 }

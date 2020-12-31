@@ -26,7 +26,7 @@ import java.util.Base64;
 import org.simpleflatmapper.util.CheckedConsumer;
 
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
+import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.cinch.rshandler.RowCallbackHandler;
 
 public class GenericRowCallbackHandler implements RowCallbackHandler{
@@ -56,7 +56,7 @@ public class GenericRowCallbackHandler implements RowCallbackHandler{
 	
 	@Override
 	public void processRow(ResultSet rs) throws SQLException {
-		Tuple item = new TupleImpl();
+		Tuple item = new Tuple();
 		
 		int i = 0;
 		for (int index = 1; index <= columnCount; index++) {

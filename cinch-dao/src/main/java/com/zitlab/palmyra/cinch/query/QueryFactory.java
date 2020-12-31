@@ -17,8 +17,6 @@ package com.zitlab.palmyra.cinch.query;
 
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -29,11 +27,11 @@ import com.zitlab.palmyra.cinch.util.DefaultJdbcUtils;
 import com.zitlab.palmyra.cinch.util.JdbcUtils;
 
 public final class QueryFactory{
-	final Quirks quirks;
+	
 	private final DataSource dataSource;
 	private JdbcUtils jdbcUtils = DefaultJdbcUtils.getInstance();
-	private Map<String, String> defaultColumnMappings;
-	private boolean defaultCaseSensitive;
+	private Quirks quirks;
+	
 	/**
 	 * If this variable is set to a non-negative value, it will be used for setting
 	 * the fetchSize property on statements used for query processing.
@@ -52,37 +50,10 @@ public final class QueryFactory{
 	 */
 	private int queryTimeout = -1;
 
-	// private final static Logger logger =
-	// LocalLoggerFactory.getLogger(Zql2o.class);
 
-	/**
-	 * Creates a new instance of the Sql2o class, which uses the given DataSource to
-	 * acquire connections to the database.
-	 * 
-	 * @param dataSource The DataSource Sql2o uses to acquire connections to the
-	 *                   database.
-	 */
 	public QueryFactory(DataSource dataSource) {
-		this(dataSource, QuirksDetector.forObject(dataSource));	
-	}
-
-	/**
-	 * Creates a new instance of the Sql2o class, which uses the given DataSource to
-	 * acquire connections to the database.
-	 * 
-	 * @param dataSource The DataSource Sql2o uses to acquire connections to the
-	 *                   database.
-	 * @param quirks     {@link org.sql2o.quirks.Quirks} allows sql2o to work around
-	 *                   known quirks and issues in different JDBC drivers.
-	 */
-	public QueryFactory(DataSource dataSource, Quirks quirks) {
 		this.dataSource = dataSource;
-		this.quirks = quirks;
-		this.defaultColumnMappings = new HashMap<String, String>();
-	}
-
-	public Quirks getQuirks() {
-		return quirks;
+		this.quirks = QuirksDetector.forObject(dataSource);
 	}
 
 	/**
@@ -110,49 +81,6 @@ public final class QueryFactory{
 		Query query = new Query(this, sql);
 		query.setParameters(params);
 		return query;
-	}
-
-	/**
-	 * Gets the default column mappings Map. column mappings added to this Map are
-	 * always available when Sql2o attempts to map between result sets and object
-	 * instances.
-	 * 
-	 * @return The {@link Map<String, String>} instance, which Sql2o internally uses
-	 *         to map column names with property names.
-	 */
-	public Map<String, String> getDefaultColumnMappings() {
-		return defaultColumnMappings;
-	}
-
-	/**
-	 * Sets the default column mappings Map.
-	 * 
-	 * @param defaultColumnMappings A {@link Map} instance Sql2o uses internally to
-	 *                              map between column names and property names.
-	 */
-	public void setDefaultColumnMappings(Map<String, String> defaultColumnMappings) {
-		this.defaultColumnMappings = defaultColumnMappings;
-	}
-
-	/**
-	 * Gets value indicating if this instance of Sql2o is case sensitive when
-	 * mapping between columns names and property names.
-	 * 
-	 * @return
-	 */
-	public boolean isDefaultCaseSensitive() {
-		return defaultCaseSensitive;
-	}
-
-	/**
-	 * Sets a value indicating if this instance of Sql2o is case sensitive when
-	 * mapping between columns names and property names. This should almost always
-	 * be false, because most relational databases are not case sensitive.
-	 * 
-	 * @param defaultCaseSensitive
-	 */
-	public void setDefaultCaseSensitive(boolean defaultCaseSensitive) {
-		this.defaultCaseSensitive = defaultCaseSensitive;
 	}
 
 	/**
@@ -211,5 +139,9 @@ public final class QueryFactory{
 
 	public void releaseConnection(Connection con) {
 		this.jdbcUtils.releaseConnection(con);
+	}
+
+	public Quirks getQuirks() {
+		return quirks;
 	}
 }

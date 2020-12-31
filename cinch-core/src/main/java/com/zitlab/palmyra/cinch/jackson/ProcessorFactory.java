@@ -16,8 +16,8 @@ public class ProcessorFactory {
 			valueProcessor, // 8 - Number Float
 			valueProcessor, // 9 - Id True
 			valueProcessor, // 10 - Id False
-			valueProcessor, // 11 - Null value
-			null // 12 - Embedded Object
+			new NullProcessor(), // 11 - Null value
+			noopProcessor // 12 - Embedded Object
 	};
 
 	public static TokenProcessor get(int i) {

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.cinch.schema;
+package com.zitlab.palmyra.api2db.schema;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,21 +27,21 @@ import com.zitlab.palmyra.api2db.exception.TupleTypeNotFoundException;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.sqlbuilder.dialect.DialectFactory;
 
-public class DefaultConfigFactory implements ConfigFactory {
-	private static Config config;
+public class DefaultSchemaFactory implements SchemaFactory {
+	private static Schema config;
 
-	public DefaultConfigFactory() {
+	public DefaultSchemaFactory() {
 	}
 
 	public void remove(String appConfig) {
 		config = null;
 	}
 
-	public Config getConfig() {
+	public Schema getConfig() {
 		return config;
 	}
 
-	public Config getConfig(String appContext) {
+	public Schema getConfig(String appContext) {
 		return config;
 	}
 
@@ -58,7 +58,7 @@ public class DefaultConfigFactory implements ConfigFactory {
 			throw new ConfigNotLoadedException("Schema not yet initialized");
 	}
 
-	public void addSchema(Config schma) {
+	public void addSchema(Schema schma) {
 		config = schma;
 	}
 
@@ -74,7 +74,7 @@ public class DefaultConfigFactory implements ConfigFactory {
 
 	@Override
 	public void reset() {
-		config = new Config();
+		config = new Schema();
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class DefaultConfigFactory implements ConfigFactory {
 		try {
 			DatabaseMetaInfo metaInfo = new DefaultDatabaseMetaInfo(ds);
 			Map<String, TupleType> tupleMap = metaInfo.getTupleTypes(schemas);
-			config = new Config();
+			config = new Schema();
 			config.setTableCfg(tupleMap);
 			config.setDialect(DialectFactory.getDialect(ds));
 			

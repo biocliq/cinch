@@ -26,11 +26,11 @@ import com.zitlab.palmyra.api2db.pdbc.pojo.ForeignKey;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
-import com.zitlab.palmyra.sqlbuilder.condition.Operator;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
+import com.zitlab.palmyra.sqlbuilder.condition.Operator;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 

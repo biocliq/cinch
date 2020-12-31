@@ -20,7 +20,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
+import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
 import com.zitlab.palmyra.converter.Converter;
 
@@ -48,7 +48,7 @@ public class GenericTupleHandler implements ResultSetHandler<Tuple>{
 	
 	@Override
 	public Tuple processRow(ResultSet rs) throws SQLException {		
-		Tuple item = new TupleImpl();
+		Tuple item = new Tuple();
 		Column column;
 		
 		int i = 0;

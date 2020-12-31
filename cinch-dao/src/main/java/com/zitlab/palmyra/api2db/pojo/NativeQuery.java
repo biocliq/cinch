@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package com.zitlab.palmyra.cinch.dao;
+package com.zitlab.palmyra.api2db.pojo;
 
 import java.util.ArrayList;
 import java.util.List;

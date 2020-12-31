@@ -15,19 +15,29 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.cinch.schema.Config;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
+import com.zitlab.palmyra.api2db.schema.Schema;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
 import com.zitlab.palmyra.sqlbuilder.condition.CustomCondition;
+import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 
 public class SelectQueryHelper extends AppendColumnHelper {
-	private Config config;
+	private SchemaFactory configFactory;
 
-	public SelectQueryHelper(Config config) {
-		this.config = config;
+	public SelectQueryHelper(SchemaFactory configFactory ) {
+		this.configFactory = configFactory;
+	}
+	
+	public Schema getConfig() {
+		return configFactory.getConfig();
+	}
+	
+	public Dialect getDialect() {
+		return configFactory.getConfig().getDialect();
 	}
 
 	public QueryParams getSelectQueryById(TupleType type, Object id, TupleFilter filter) {
@@ -35,7 +45,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 	//	String tableName = type.getTable();
 		String reference = type.getName();
 		Table rootTable = new Table(type.getSchema(),type.getTable(), type.getName(), reference);
-		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, config.getDialect());
+		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, getDialect());
 		//Table rootTable = query.getPrimaryTable();
 		DataList list = new DataList();
 		if (null != filter) {
@@ -71,7 +81,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 		String tableName = tupleType.getTable();
 		String reference = tupleType.getName();
 		Table rootTable = new Table(tupleType.getSchema(),tableName, reference);
-		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, config.getDialect());
+		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, getDialect());
 
 		addQueryCriteria(tupleType.getName(), item, tupleType, query, rootTable, valueList);
 		setAddlFilters(query, filter);
@@ -89,7 +99,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 		params.setQuery(query.getQuery());
 		if (filter.isTotal()) {
-			params.setCountQuery(query.getCountQuery(config.getDialect()));
+			params.setCountQuery(query.getCountQuery(getDialect()));
 		}
 
 		if (logger.isTraceEnabled())
@@ -103,7 +113,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 			return;
 		String _join = filter.getAddlJoin();
 		if (null != _join) {
-			String join = AddlClauseHelper.convertJoinClause(_join, query, config);
+			String join = AddlClauseHelper.convertJoinClause(_join, query, getConfig());
 			if (null != join)
 				query.setAddlJoin(join);
 		}
@@ -111,6 +121,6 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 	public QueryParams getSelectQueryByUQKey(Tuple item, TupleFilter filter) {
 		UniqueQueryHelper queryHelper = new UniqueQueryHelper(this);
-		return queryHelper.getSelectQueryByUQKey(item, filter, config.getDialect());
+		return queryHelper.getSelectQueryByUQKey(item, filter, getDialect());
 	}
 }

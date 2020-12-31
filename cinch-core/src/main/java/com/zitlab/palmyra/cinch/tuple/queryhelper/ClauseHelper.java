@@ -23,7 +23,7 @@ import com.zitlab.palmyra.api2db.exception.Validation;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.FieldList;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 import com.zitlab.palmyra.util.TextUtil;

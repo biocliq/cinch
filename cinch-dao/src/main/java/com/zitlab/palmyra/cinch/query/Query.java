@@ -44,11 +44,11 @@ public class Query {
 	private QueryFactory factory;
 	private boolean throwOnMappingFailure = false;
 	private String name;
+	
 	private JdbcUtils jdbcUtils;
 	private int fetchSize = -1;
 	private final String query;
 	private List<Object> params = new ArrayList<Object>();
-	private Integer expectedResultSetSize = 15;
 
 //	private static final Logger logger = LoggerFactory.getLogger(Query.class);
 
@@ -57,7 +57,7 @@ public class Query {
 	}
 
 	public Query(QueryFactory factory, String query, String name) {
-		this.factory = factory;
+		this.factory = factory;		
 		this.name = name;
 		this.fetchSize = factory.getFetchSize();
 		this.query = query;
@@ -107,13 +107,12 @@ public class Query {
 		PreparedStatement stmt = con.prepareStatement(query);
 		if (this.params.size() > 0) {
 			int idx = 1;
-
+			Quirks quirks = getQuirks();
 			for (Object param : params) {
-				this.factory.getQuirks().setParameter(stmt, idx++, param);
+				quirks.setParameter(stmt, idx++, param);
 			}
 		}
-		// int fetchSize = getFetchSize();
-
+		
 		if (fetchSize > 0)
 			stmt.setFetchSize(fetchSize);
 		return stmt;
@@ -123,8 +122,9 @@ public class Query {
 		PreparedStatement stmt = con.prepareStatement(query, option);
 		if (this.params.size() > 0) {
 			int idx = 1;
+			Quirks quirks = getQuirks();
 			for (Object param : params) {
-				this.factory.getQuirks().setParameter(stmt, idx++, param);
+				quirks.setParameter(stmt, idx++, param);
 			}
 		}
 		return stmt;
@@ -353,9 +353,7 @@ public class Query {
 	public <V> V executeScalar(Class<V> returnType) {
 		try {
 			Converter<V> converter;
-			// noinspection unchecked
 			converter = throwIfNull(returnType, getQuirks().converterOf(returnType));
-			// noinspection unchecked
 			return executeScalar(converter);
 		} catch (ConverterException e) {
 			throw new Sql2oException("Error occured while converting value from database to type " + returnType, e);
@@ -364,7 +362,6 @@ public class Query {
 
 	public <V> V executeScalar(Converter<V> converter) {
 		try {
-			// noinspection unchecked
 			return converter.convert(executeScalar());
 		} catch (ConverterException e) {
 			throw new Sql2oException("Error occured while converting value from database", e);
@@ -402,13 +399,5 @@ public class Query {
 			return null;
 		}
 		throw new Sql2oException("More than one record found");
-	}
-
-	public Integer getExpectedResultSetSize() {
-		return expectedResultSetSize;
-	}
-
-	public void setExpectedResultSetSize(Integer expectedResultSetSize) {
-		this.expectedResultSetSize = expectedResultSetSize;
 	}
 }

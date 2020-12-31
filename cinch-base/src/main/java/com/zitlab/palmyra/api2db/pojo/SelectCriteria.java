@@ -17,8 +17,6 @@ package com.zitlab.palmyra.api2db.pojo;
 
 import java.util.List;
 
-import com.zitlab.palmyra.api2db.pojo.impl.FieldListImpl;
-
 /**
  * @author ksvraja
  *
@@ -98,7 +96,7 @@ public abstract class SelectCriteria {
 
 	public void setFieldsAsString(List<String> fieldList) {
 		if (null == this.fields)
-			this.fields = new FieldListImpl();
+			this.fields = new FieldList();
 		if (null != fieldList)
 			this.fields.setAttributes(fieldList);
 	}
@@ -127,13 +125,13 @@ public abstract class SelectCriteria {
 
 	public void addOrderDesc(String field) {
 		if(null == orderBy)
-			orderBy = new FieldListImpl();
+			orderBy = new FieldList();
 		orderBy.getAttributes().add("-" + field);
 	}
 
 	public void addOrderAsc(String field) {
 		if(null == orderBy)
-			orderBy = new FieldListImpl();
+			orderBy = new FieldList();
 		orderBy.getAttributes().add("+" + field);
 	}
 

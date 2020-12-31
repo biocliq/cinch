@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 
 import org.simpleflatmapper.util.CheckedConsumer;
 
+import com.zitlab.palmyra.api2db.pojo.NativeQuery;
 import com.zitlab.palmyra.cinch.query.Query;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.query.QueryOptions;
@@ -101,6 +102,11 @@ public abstract class RecordDao{
 		Query query = factory.createQuery(sql, params);
 		return query.executeAndFetchUnique(returnType);
 	}
+	
+	protected <T> T selectUnique(String sql, ResultSetHandler<T> handler, Object... params) {
+		Query query = factory.createQuery(sql, params);
+		return query.executeAndFetchUnique(handler);
+	}
 
 	protected <T> T selectUnique(String sql, Class<T> returnType, Collection<Object> params) {
 		Query query = factory.createQuery(sql, params);		
@@ -113,14 +119,12 @@ public abstract class RecordDao{
 	}
 
 	public <T> List<T> select(NativeQuery params, Class<T> returnType) {
-		Query query = factory.createQuery(params.getQuery(), params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
+		Query query = factory.createQuery(params.getQuery(), params.getParams());		
 		return query.executeAndFetch(returnType);
 	}
 	
 	public <T> List<T> select(NativeQuery params, ResultSetHandler<T> handler) {
-		Query query = factory.createQuery(params.getQuery(), params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
+		Query query = factory.createQuery(params.getQuery(), params.getParams());		
 		return query.executeAndFetch(handler);
 	}
 	
@@ -136,13 +140,11 @@ public abstract class RecordDao{
 	
 	public <T> void select(QueryOptions params, CheckedConsumer<T> consumer, Class<T> clazz) {
 		Query query = factory.createQuery(params.getQuery(), params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
 		query.executeAndFetch(consumer,clazz);
 	}
 
 	public <T> void select(QueryOptions params, RowCallbackHandler consumer) {
 		Query query = factory.createQuery(params.getQuery(), params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
 		query.executeAndFetch(consumer);
 	}
 	

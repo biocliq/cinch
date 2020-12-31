@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.cinch.schema;
+package com.zitlab.palmyra.api2db.schema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +22,15 @@ import javax.sql.DataSource;
 
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 
-public interface ConfigFactory {
+public interface SchemaFactory {
 		
 	public void remove(String schema);
 	
-	public Config getConfig();
+	public Schema getConfig();
 	
-	public Config getConfig(String appContext);
+	public Schema getConfig(String appContext);
 	
-	public void addSchema(Config schema);
+	public void addSchema(Schema schema);
 	
 	public TupleType getTableCfg(String type);
 

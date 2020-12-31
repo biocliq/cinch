@@ -5,17 +5,16 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.zitlab.cinch.schema.Config;
-import com.zitlab.cinch.schema.ConfigFactory;
-import com.zitlab.cinch.schema.DefaultConfigFactory;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.FieldList;
+import com.zitlab.palmyra.api2db.pojo.FieldList;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.FieldListImpl;
-import com.zitlab.palmyra.cinch.query.Query;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
+import com.zitlab.palmyra.api2db.schema.DefaultSchemaFactory;
+import com.zitlab.palmyra.api2db.schema.Schema;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.TupleDao;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
 import com.zitlab.palmyra.cinch.tuple.resulthandler.GenericTupleHandler;
 import com.zitlab.palmyra.util.QueryTimer;
 
@@ -26,20 +25,20 @@ public class TestConfigProvider {
 		
 		QueryFactory zql2o = new QueryFactory(ds);
 				
-		ConfigFactory factory = new DefaultConfigFactory();
+		SchemaFactory factory = new DefaultSchemaFactory();
 				
 		
 		Date start, end;
 		Tuple tuple = null;
-		int loopCount = 2000;
+		int loopCount = 50000;
 		
 		
 		factory.load("default", ds, "pharma");
 		List<Tuple> tuples = null;
-		Config config = factory.getConfig();
+		Schema config = factory.getConfig();
 		TupleFilter filter = new TupleFilter();
 		filter.setLimit(-1);
-		FieldList fl = new FieldListImpl();
+		FieldList fl = new FieldList();
 		fl.addField("grn");
 		fl.addField("batchNumber");
 		fl.addField("expiryOn");
@@ -47,7 +46,7 @@ public class TestConfigProvider {
 		filter.setFields(fl);
 		TupleType tt = config.getTableCfg("DrugGrnEntry");
 		
-		TupleDao dao = new TupleDao(config,ds, "raja");
+		TupleDao dao = new TupleDao(factory,ds, "raja");
 		GenericTupleHandler hand = new GenericTupleHandler();
 		
 		for (int i = 0; i < 200; i++) {
@@ -57,27 +56,13 @@ public class TestConfigProvider {
 		QueryTimer.reset();
 		
 		
-//		start = new Date();
-//		for (int i = 0; i < loopCount; i++) {			
-//			grns = new GrnHandler();
-//			 query.executeAndFetch(grns, Grn.class);			 
-//		}
-//		System.out.println(grns.list().get(0).getBillNumber());
-//		end = new Date();
-//		System.out.println(end.getTime() - start.getTime());
-//		System.out.println("object binding " + QueryTimer.getTimer());
-//		QueryTimer.reset();
-		
-		
-		
-		
 		QueryTimer.start();
 		start = new Date();
 		for (int i = 0; i < loopCount; i++) {
 			tuples = dao.list(tt, filter);
 		}				
 		end = new Date();
-		System.out.println("Elapsed time " + (end.getTime() - start.getTime()));
+		System.out.println("loopCount " + loopCount + " Elapsed time " + (end.getTime() - start.getTime()));
 		
 		QueryTimer.reset();
 		Tuple rs = tuples.get(0);

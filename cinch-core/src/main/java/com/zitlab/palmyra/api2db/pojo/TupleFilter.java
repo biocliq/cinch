@@ -13,11 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.palmyra.cinch.tuple.dao;
-
-import com.zitlab.palmyra.api2db.pojo.SelectCriteria;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
+package com.zitlab.palmyra.api2db.pojo;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
@@ -33,7 +29,7 @@ public class TupleFilter extends SelectCriteria {
 		if (null != criteria) {
 			criteria.setAttribute(column, condition);
 		} else {
-			criteria = new TupleImpl();
+			criteria = new Tuple();
 			setCriteria(criteria);
 			criteria.setAttribute(column, condition);
 		}

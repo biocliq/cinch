@@ -20,24 +20,24 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.zitlab.cinch.schema.Config;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.dao.CinchDao;
 import com.zitlab.palmyra.cinch.mapper.ClassMapper;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.SelectQueryHelper;
 
 public class QueryBuilder {
 	private Class<?> clazz;
-	private Config config;
+	private SchemaFactory configFactory;
 	private DataSource ds;
 	private TupleFilter filter = new TupleFilter();
 	
-	public <T> QueryBuilder(Class<T> clazz, Config config, DataSource ds) {
+	public <T> QueryBuilder(Class<T> clazz, SchemaFactory config, DataSource ds) {
 		this.clazz = clazz;
-		this.config = config;
+		this.configFactory = config;
 		this.ds = ds;
 		filter.setLimit(-1);
 	}
@@ -62,8 +62,8 @@ public class QueryBuilder {
 		};
 		ClassMapper mapper = new ClassMapper();
 		String type = mapper.getTable(clazz);
-		TupleType tupleType = config.getTableCfg(type);
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		TupleType tupleType = configFactory.getTableCfg(type);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
 		return dao.select(params);

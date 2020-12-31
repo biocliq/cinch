@@ -16,36 +16,78 @@
 
 package com.zitlab.palmyra.api2db.pojo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
-public interface FieldList {
+import com.zitlab.palmyra.api2db.pojo.FieldList;
 
-	public List<String> getAttributes();
+public class FieldList {
+	private List<String> attributes = new ArrayList<String>();
+	private HashMap<String, FieldList> reference = new LinkedHashMap<String, FieldList>();
 
-	public int size();
-
-	public void setAttributes(List<String> attributes);
-
-	public void addParentField(String field);
-
-	public void addField(String field);
-	
-	public default void addFields(String... fields) {
-		for(String field: fields) {
-			addField(field);
-		}
-	}
-	
-	public default void addParentFields(String... fields) {
-		for(String field: fields) {
-			addParentField(field);
-		}
+	public FieldList() {
 	}
 
-	public HashMap<String, FieldList> getAllReferences();
+	public List<String> getAttributes() {
+		return attributes;
+	}
 
-	public void setReference(String key, FieldList list);
+	public int size() {
+		return attributes.size();
+	}
 
-	public FieldList getReference(String key);
+	public void setAttributes(List<String> attributes) {
+		for (String att : attributes) {
+			this.addField(att);
+		}
+	}
+
+	public void addParentField(String refernce, String field) {
+		FieldList fieldList = reference.get(refernce);
+		if (null == fieldList) {
+			fieldList = new FieldList();
+			reference.put(refernce, fieldList);
+		}
+		fieldList.addParentField(field);
+	}
+
+	public void addField(String field) {
+		if(!this.attributes.contains(field))
+			this.attributes.add(field);
+		
+	}
+
+	
+	public HashMap<String, FieldList> getAllReferences() {
+		return reference;
+	}
+
+	
+	public void setReference(String key, FieldList list) {
+		reference.put(key, list);		
+	}
+
+	
+	public FieldList getReference(String key) {
+		return reference.get(key);
+	}
+
+	
+	public void addParentField(String field) {
+		int index = field.indexOf('.');
+		if (index < 0) {
+			this.addField(field);
+		} else {
+			String ref = field.substring(0, index);
+			String _field = field.substring(index + 1);
+			FieldList fieldList = reference.get(ref);
+			if (null == fieldList) {
+				fieldList = new FieldList();
+				reference.put(ref, fieldList);
+			}
+			fieldList.addParentField(_field);
+		}		
+	}
 }

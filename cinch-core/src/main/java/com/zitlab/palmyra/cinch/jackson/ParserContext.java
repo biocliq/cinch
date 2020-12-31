@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
 import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
 
 public class ParserContext {
@@ -16,15 +15,15 @@ public class ParserContext {
 
 	private String fieldKey;
 
-	public ParserContext(String key, TupleType tt, TupleImpl tuple) {
+	public ParserContext(String key, TupleType tt, Tuple tuple) {
 		tupleContext = new TupleContext(key, tt, tuple);
 	}
 	
-	public ParserContext(String key, TupleType tt, TupleImpl tuple, ArrayList<Tuple> tuples) {
+	public ParserContext(String key, TupleType tt, Tuple tuple, ArrayList<Tuple> tuples) {
 		tupleContext = new TupleContext(key, tt, tuple, tuples);
 	}
 
-	public void push(String key, TupleType tt, TupleImpl tuple) {		
+	public void push(String key, TupleType tt, Tuple tuple) {		
 		context.add(tupleContext);
 		tupleContext = new TupleContext(key, tt, tuple);
 	}
@@ -63,7 +62,7 @@ public class ParserContext {
 		this.factory = factory;
 	}
 
-	public TupleImpl newTuple() {
+	public Tuple newTuple() {
 		return factory.instance();
 	}
 }

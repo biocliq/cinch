@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogger;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
@@ -29,11 +30,12 @@ public class DeleteQueryHelper {
 	private static Logger logger = LoggerFactory.getLogger(DeleteQueryHelper.class);
 	
 	public static QueryParams getDeleteQueryByID(Tuple item,
-			ChangeLogger auditLogger, String currentUser, Dialect dialect) {
+			ChangeLogger auditLogger, String currentUser, SchemaFactory configFactory) {
 		Object id = item.getId();
 		if (null == id)
 			return null;
 		TupleType type = item.getTupleType();
+		Dialect dialect = configFactory.getConfig().getDialect();
 		
 		PrimaryKeyHelper keyHelper = new PrimaryKeyHelper(type);
 		String reference = type.getName();

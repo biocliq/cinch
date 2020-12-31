@@ -17,32 +17,29 @@ package com.zitlab.palmyra.cinch;
 
 import javax.sql.DataSource;
 
-import com.zitlab.cinch.schema.Config;
-import com.zitlab.cinch.schema.ConfigFactory;
-import com.zitlab.cinch.schema.DefaultConfigFactory;
+import com.zitlab.palmyra.api2db.schema.DefaultSchemaFactory;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 
 public class CinchORM {
 	private DataSource ds;
-	private ConfigFactory configFactory;
-	private Config config;
+	private SchemaFactory configFactory;
 	
 	public CinchORM(DataSource ds) {
 		this.ds = ds;
-		configFactory = new DefaultConfigFactory();
+		configFactory = new DefaultSchemaFactory();
 	}
 	
 	public CinchORM loadSchemas(String... schemas) {
-		ConfigFactory factory = getConfigFactory();
-		factory.load("default", ds, schemas);
-		config = factory.getConfig();
+		SchemaFactory factory = getConfigFactory();
+		factory.load("default", ds, schemas);		
 		return this;
 	}
 	
-	public ConfigFactory getConfigFactory() {
+	public SchemaFactory getConfigFactory() {
 		return configFactory;
 	}
 	
 	public <T> QueryBuilder query(Class<T> clazz) {
-		return new QueryBuilder(clazz, configFactory.getConfig(), ds);		
+		return new QueryBuilder(clazz, configFactory, ds);		
 	}
 }

@@ -115,7 +115,6 @@ public abstract class CinchDao<T> {
 	public List<T> select(QueryOptions params) {
 		Query query = factory.createQuery(params.getQuery());
 		query.setParameters(params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
 		return query.executeAndFetch(getType());
 	}
 
@@ -128,7 +127,6 @@ public abstract class CinchDao<T> {
 	public void select(QueryOptions params, CheckedConsumer<T> consumer, Class<T> clazz) {
 		Query query = factory.createQuery(params.getQuery());
 		query.setParameters(params.getParams());
-		query.setExpectedResultSetSize(params.getExpectedResultSetSize());
 		query.executeAndFetch(consumer,clazz);
 	}
 

@@ -19,7 +19,7 @@ package com.zitlab.palmyra.cinch.tuple.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.zitlab.palmyra.cinch.dao.NativeQuery;
+import com.zitlab.palmyra.api2db.pojo.NativeQuery;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.Table;
 import com.zitlab.palmyra.util.StringBuilderCache;
 

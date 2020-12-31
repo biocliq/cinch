@@ -15,10 +15,10 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.cinch.schema.Config;
 import com.zitlab.palmyra.api2db.exception.DDMException;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
+import com.zitlab.palmyra.api2db.schema.Schema;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
 import com.zitlab.palmyra.util.StringBuilderCache;
 
@@ -30,7 +30,7 @@ public class AddlClauseHelper {
 
 	public static final String CURRENT_USER = "::current_user";
 
-	public static String convertJoinClause(String clause, Query<Table> query, Config schema) {
+	public static String convertJoinClause(String clause, Query<Table> query, Schema schema) {
 
 		StringBuilder sb = StringBuilderCache.get();
 		if (null == clause)
@@ -49,7 +49,7 @@ public class AddlClauseHelper {
 		return StringBuilderCache.release(sb);
 	}
 
-	public static String convertCriteriaClause(String clause, Query<Table> query, Config schema) {
+	public static String convertCriteriaClause(String clause, Query<Table> query, Schema schema) {
 
 		StringBuilder sb = StringBuilderCache.get();
 		if (null == clause)
@@ -68,7 +68,7 @@ public class AddlClauseHelper {
 		return StringBuilderCache.release(sb);
 	}
 	
-	private static void updateAlias(String fragment, Query<Table> query, StringBuilder sb, Config schema) {
+	private static void updateAlias(String fragment, Query<Table> query, StringBuilder sb, Schema schema) {
 		int index = fragment.lastIndexOf(".");
 		if (index > 0) {
 			Table table = query.getSubTable(fragment.substring(0, index));

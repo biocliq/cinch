@@ -27,7 +27,7 @@ import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.FieldList;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.cinch.tuple.dao.TupleFilter;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
 import com.zitlab.palmyra.sqlbuilder.condition.BinaryCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.NullCondition;
@@ -223,12 +223,8 @@ public class AppendColumnHelper extends QueryHelper {
 		TupleAttribute attribute = null;
 		Table subTable = null;
 
-		if (null != fields) {
-			int size = fields.size();
-			String fieldName;
-			for (int index = 0; index < size; index++) {
-				fieldName = fields.get(index);
-				// logger.debug("FieldList processing : {}.{}", tupleType.getName(), fieldName);
+		if (null != fields) {			
+			for (String fieldName : fields) {
 				attribute = tupleAttrMap.get(fieldName);
 				if (null != attribute) {
 					rootTable.addColumn(attribute);
@@ -244,7 +240,6 @@ public class AppendColumnHelper extends QueryHelper {
 				fKey = tupleType.getForeignKey(key);
 				if (null != fKey) {
 					subType = fKey.getTargetType();
-
 					sb.setLength(0);
 					TextUtil.appendAll(sb, reference, ".", key);
 					String nextRef = sb.toString();

@@ -15,6 +15,10 @@
  ******************************************************************************/
 package com.zitlab.palmyra.api2db.pdbc.pojo;
 
+import java.util.function.BiConsumer;
+
+import com.zitlab.palmyra.api2db.exception.FieldValidationException;
+import com.zitlab.palmyra.api2db.exception.Validation;
 import com.zitlab.palmyra.converter.Converter;
 
 public class TupleAttribute {
@@ -24,10 +28,10 @@ public class TupleAttribute {
 	private static final int AGGREGATE = 4;
 	private static final int FORMULA = 8;
 
-	private static final int PRIMARY_KEY 		= 1;
-	private static final int AUTO_INCREMENT 	= 2;
-	private static final int NPRIMARY_KEY 		= 0b11110;
-	private static final int NAUTO_INCREMENT 	= 0b11101;
+	private static final int PRIMARY_KEY = 1;
+	private static final int AUTO_INCREMENT = 2;
+	private static final int NPRIMARY_KEY = 0b11110;
+	private static final int NAUTO_INCREMENT = 0b11101;
 
 	private int id;
 	private String attribute;
@@ -35,10 +39,12 @@ public class TupleAttribute {
 	private boolean active = true;
 	private String displayLabel;
 	private int dataType;
-	
+
 	private Converter<?> converter;
+	private BiConsumer<String, Object> mandatoryChecker;
+	
 	// 0 - not a primary key, 1 - primary key, 2 - Auto incremental key
-	//private int primaryKey;
+	// private int primaryKey;
 	private int primaryAutoKey = 0;
 
 	private boolean mandatory;
@@ -69,6 +75,7 @@ public class TupleAttribute {
 
 	public final void setMandatory(boolean mandatory) {
 		this.mandatory = mandatory;
+		mandatoryChecker = mandatory ? new MandatoryVerifier() : NoopVerifier.instance();
 	}
 
 	public final void setMandatory(int mandatory) {
@@ -98,19 +105,19 @@ public class TupleAttribute {
 	public final void setAttribute(String attribName) {
 		this.attribute = attribName;
 	}
-	
+
 	public final void setPrimaryKey(boolean flag) {
 		primaryAutoKey = flag ? (primaryAutoKey | PRIMARY_KEY) : (primaryAutoKey & NPRIMARY_KEY);
 	}
-	
+
 	public final void setAutoIncrement(boolean flag) {
 		primaryAutoKey = flag ? (primaryAutoKey | AUTO_INCREMENT) : (primaryAutoKey & NAUTO_INCREMENT);
 	}
-	
+
 	public final boolean isPrimaryKey() {
 		return (primaryAutoKey & PRIMARY_KEY) > 0;
 	}
-	
+
 	public final boolean isAutoIncrement() {
 		return (primaryAutoKey & AUTO_INCREMENT) > 0;
 	}
@@ -263,5 +270,20 @@ public class TupleAttribute {
 //	public final ForeignKey getForeignKey() {
 //		return foreignKey;
 //	}
+
+	public void checkMandatory(String type, Object value) {
+		mandatoryChecker.accept(type, value);
+	}
+		
+	private class MandatoryVerifier implements BiConsumer<String, Object> {
+		@Override
+		public void accept(String type, Object value) {
+			if (null != value)
+				return;
+			throw new FieldValidationException(attribute, type,
+					"Mandatory parameter `" + attribute + "` is missing for the CI Type `" + type + "`",
+					Validation.MANDATORY);
+		}
+	}
 
 }

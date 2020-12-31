@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.cinch.schema;
+package com.zitlab.palmyra.api2db.schema;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 import com.zitlab.palmyra.sqlbuilder.dialect.DialectFactory;
 
 public class MetaConfigLoader {
-	public static void load(Config config, DataSource ds) throws SQLException{
+	public static void load(Schema config, DataSource ds) throws SQLException{
 		DatabaseMetaData dbmd = ds.getConnection().getMetaData();
 		config.setDbName(dbmd.getDatabaseProductName());
 		config.setDbVersion(dbmd.getDatabaseProductVersion());

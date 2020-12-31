@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
 import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
 
 public class TupleDeserializer {
@@ -21,15 +20,17 @@ public class TupleDeserializer {
 		this.factory = factory;
 	}
 	
-	public TupleImpl readTuple(InputStream inputStream, TupleType type) throws Exception {
+	public Tuple readTuple(InputStream inputStream, TupleType type) throws Exception {
 		JsonFactory jsonFactory = new JsonFactory();
 		JsonParser parser = jsonFactory.createParser(inputStream);
-		return parseTuple(parser, type);
+		Tuple result = parseTuple(parser, type);
+		parser.close();
+		return result;
 	}
 
-	public TupleImpl parseTuple(JsonParser parser, TupleType tupleType) throws IOException {
+	public Tuple parseTuple(JsonParser parser, TupleType tupleType) throws IOException {
 		JsonToken token;
-		TupleImpl tuple = factory.instance();
+		Tuple tuple = factory.instance();
 		parser.nextToken();
 		ParserContext context = new ParserContext(null, tupleType, tuple);
 		context.setFactory(factory);
@@ -45,12 +46,14 @@ public class TupleDeserializer {
 
 		JsonFactory jsonFactory = new JsonFactory();
 		JsonParser parser = jsonFactory.createParser(inputStream);
-		return parseTuples(parser, type);
+		List<Tuple> result = parseTuples(parser, type);
+		parser.close();
+		return result;
 	}
 
 	public List<Tuple> parseTuples(JsonParser parser, TupleType tupleType) throws IOException {
 		JsonToken token;
-		TupleImpl tuple = factory.instance();
+		Tuple tuple = factory.instance();
 		parser.nextToken();
 		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
 		ParserContext context = new ParserContext(null, tupleType, tuple, tuples);

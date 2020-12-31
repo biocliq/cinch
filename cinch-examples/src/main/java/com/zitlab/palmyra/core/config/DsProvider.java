@@ -10,8 +10,8 @@ public class DsProvider {
 		
 		String url = "jdbc:mariadb://127.0.0.1:3306/pharma?zeroDateTimeBehavior=convertToNull";
 		BasicDataSource ds = new BasicDataSource();
-		ds.setUsername("user");
-		ds.setPassword("password");
+		ds.setUsername("ksvraja");
+		ds.setPassword("sriraja");
 		ds.setUrl(url);
 		ds.setMaxIdle(5);
 		ds.setMinIdle(5);

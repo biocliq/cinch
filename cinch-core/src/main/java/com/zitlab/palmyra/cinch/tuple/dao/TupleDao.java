@@ -26,7 +26,6 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.cinch.schema.Config;
 import com.zitlab.palmyra.api2db.exception.GenericValidation;
 import com.zitlab.palmyra.api2db.exception.MultipleTuplesExistsException;
 import com.zitlab.palmyra.api2db.exception.Validation;
@@ -34,8 +33,9 @@ import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Action;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.api2db.pojo.TupleFilter;
 import com.zitlab.palmyra.api2db.pojo.TupleResultSet;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
+import com.zitlab.palmyra.api2db.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogger;
 import com.zitlab.palmyra.cinch.dao.RecordDao;
 import com.zitlab.palmyra.cinch.query.QueryFactory;
@@ -53,50 +53,50 @@ import com.zitlab.palmyra.cinch.tuple.resulthandler.TupleRowCallbackHandler;
 public class TupleDao extends RecordDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(TupleDao.class);
-	private Config config;
+	private SchemaFactory configFactory;
 	private AccessVerifier accessVerifier;
 	private String user;
 	private TupleFactory tupleFactory;
 
-	public TupleDao(Config config, DataSource ds, String user) {
+	public TupleDao(SchemaFactory configFactory, DataSource ds, String user) {
 		super(new QueryFactory(ds));
-		this.config = config;
+		this.configFactory = configFactory;
 		this.user = user;
 		this.tupleFactory = TupleFactory.NOOP;
 	}
 
-	public TupleDao(Config config, QueryFactory queryFactory, String user) {
+	public TupleDao(SchemaFactory configFactory, QueryFactory queryFactory, String user) {
 		super(queryFactory);
-		this.config = config;
+		this.configFactory = configFactory;
 		this.user = user;
 		this.tupleFactory = TupleFactory.NOOP;
 	}
 	
-	public TupleDao(Config config, DataSource ds, String user, TupleFactory tupleFactory) {
+	public TupleDao(SchemaFactory configFactory, DataSource ds, String user, TupleFactory tupleFactory) {
 		super(new QueryFactory(ds));
-		this.config = config;
+		this.configFactory = configFactory;
 		this.user = user;
 		this.tupleFactory = tupleFactory;
 	}
 
-	public TupleDao(Config config, QueryFactory queryFactory, String user, TupleFactory tupleFactory) {
+	public TupleDao(SchemaFactory configFactory, QueryFactory queryFactory, String user, TupleFactory tupleFactory) {
 		super(queryFactory);
-		this.config = config;
+		this.configFactory = configFactory;
 		this.user = user;
 		this.tupleFactory = tupleFactory;
 	}
 
 	public TupleType getTableCfg(String type) {
-		return config.getTableCfg(type);
+		return configFactory.getTableCfg(type);
 	}
 
 	public Tuple getById(String type, Object id, TupleFilter filter) {
-		TupleType tupleType = config.getTableCfg(type);
+		TupleType tupleType = configFactory.getTableCfg(type);
 		return getById(tupleType, id, filter);
 	}
 
 	public Tuple getById(TupleType type, Object id, TupleFilter filter) {
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSelectQueryById(type, id, filter);
 		Tuple tuple = selectUnique(params, getHandler(type, params.getTableLookup()));
 		return tuple;
@@ -115,7 +115,7 @@ public class TupleDao extends RecordDao {
 	}
 
 	public TupleResultSet query(String ciType, TupleFilter filter) {		
-		TupleType type = config.getTableCfg(ciType);
+		TupleType type = configFactory.getTableCfg(ciType);
 		return query(type, filter);
 	}
 
@@ -126,7 +126,7 @@ public class TupleDao extends RecordDao {
 	 * @return
 	 */
 	public TupleResultSet query(TupleType tupleType, TupleFilter filter) {
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
 		List<Tuple> tuples = select(params, getHandler(tupleType, params.getTableLookup()));
@@ -140,7 +140,7 @@ public class TupleDao extends RecordDao {
 	}
 
 	public List<Tuple> list(TupleType tupleType, TupleFilter filter) {
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
 		List<Tuple> tuples = select(params, getHandler(tupleType, params.getTableLookup()));
@@ -148,13 +148,13 @@ public class TupleDao extends RecordDao {
 	}
 
 	public void list(TupleType tupleType, TupleFilter filter, ResultProcessor<Tuple> rp) throws IOException {
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		select(params, getHandler(tupleType, params.getTableLookup(), rp));
 	}
 
 	public void query(TupleType tupleType, TupleFilter filter, ResultProcessor<Tuple> rp) throws IOException {
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
 		TupleResultSet rs = new TupleResultSet();
@@ -173,7 +173,7 @@ public class TupleDao extends RecordDao {
 	 */
 	public List<Tuple> searchByKey(Tuple item, TupleFilter filter) {
 		TupleType tupleType = item.getTupleType();
-		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(config);
+		SelectQueryHelper selectQueryHelper = new SelectQueryHelper(configFactory);
 		QueryParams params = selectQueryHelper.getSelectQueryByUQKey(item, filter);
 		if (null != params) {
 			if (logger.isTraceEnabled())
@@ -208,14 +208,14 @@ public class TupleDao extends RecordDao {
 	}
 
 	public Tuple getUniqueItem(TupleType ttype, String key, Object value, TupleFilter filter) {
-		TupleImpl criteria = new TupleImpl();
+		Tuple criteria = new Tuple();
 		criteria.setTupleType(ttype);
 		criteria.setAttribute(key, value);
 		return getUniqueItem(criteria, filter);
 	}
 
 	public int delete(Tuple item, ChangeLogger changeLogger) {
-		QueryParams params = DeleteQueryHelper.getDeleteQueryByID(item, changeLogger, getUser(), config.getDialect());
+		QueryParams params = DeleteQueryHelper.getDeleteQueryByID(item, changeLogger, getUser(), configFactory);
 		if (null != params) {
 			return delete(params);
 		} else {
@@ -279,7 +279,7 @@ public class TupleDao extends RecordDao {
 		TupleType tupleType = item.getTupleType();
 		UpdateQueryHelper updateQueryHelper = new UpdateQueryHelper(accessVerifier.getNonUpdatableFields(item),
 				auditLogger);
-		QueryParams params = updateQueryHelper.getUpdateQueryByID(tupleType, item, dbItem, getUser(), config.getDialect(),
+		QueryParams params = updateQueryHelper.getUpdateQueryByID(tupleType, item, dbItem, getUser(), configFactory,
 				this);
 		if (null != params) {
 			update(params);
@@ -295,7 +295,7 @@ public class TupleDao extends RecordDao {
 
 		InsertQueryHelper insertQueryHelper = new InsertQueryHelper(accessVerifier.getNonInsertableFields(item));
 
-		QueryParams params = insertQueryHelper.getInsertStatement(tupleType, item, config.getDialect(), this);
+		QueryParams params = insertQueryHelper.getInsertStatement(tupleType, item, configFactory, this);
 		if (null != params) {
 			if (tupleType.isAutoIncrementPkey()) {
 				TupleAttribute pKey = tupleType.getAutoIncrementkey();

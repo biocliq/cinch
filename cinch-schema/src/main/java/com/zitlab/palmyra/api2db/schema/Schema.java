@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.cinch.schema;
+package com.zitlab.palmyra.api2db.schema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import com.zitlab.palmyra.api2db.exception.TupleTypeNotFoundException;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 
-public class Config {
+public class Schema {
 	private int id;
 	private String name;
 	private String customer;

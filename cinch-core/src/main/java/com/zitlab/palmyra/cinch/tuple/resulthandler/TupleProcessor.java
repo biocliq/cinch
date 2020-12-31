@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.impl.TupleImpl;
+import com.zitlab.palmyra.api2db.pojo.Tuple;
 import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.Column;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.Table;
@@ -59,14 +59,14 @@ abstract class TupleProcessor {
 		}
 	}
 
-	private TupleImpl getItem(String ciType, int count) {
-		TupleImpl tuple = factory.instance(count);
+	private Tuple getItem(String ciType, int count) {
+		Tuple tuple = factory.instance(count);
 		tuple.setType(ciType);
 		return tuple;
 	}
 
 	public Tuple process(ResultSet rs) throws SQLException {
-		TupleImpl tuple = getItem(tupleType.getName(), primaryTableSize);
+		Tuple tuple = getItem(tupleType.getName(), primaryTableSize);
 		tuple.setTupleType(tupleType);
 		Map<String, Object> attributes = tuple.getAttributes();
 		List<Column> columns = table.getColumns();

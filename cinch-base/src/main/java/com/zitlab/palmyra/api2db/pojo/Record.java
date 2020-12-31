@@ -87,4 +87,20 @@ public interface Record {
 	public void setError(String error);
 
 	public void setType(String type);
+
+	public void setActionCode(Integer action);
+
+	public Integer getActionCode();
+	
+	public default boolean forDelete() {
+		return this.getActionCode() == Action.DELETE;
+	}
+	
+	public default boolean forCreate() {
+		return this.getActionCode() == Action.CREATE;
+	}
+	
+	public default boolean forUpdate() {
+		return this.getActionCode() == Action.UPDATE;
+	}
 }
