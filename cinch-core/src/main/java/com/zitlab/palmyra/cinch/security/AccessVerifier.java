@@ -15,18 +15,53 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.security;
 
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.zitlab.palmyra.api2db.pojo.Tuple;
 
 public interface AccessVerifier {
-	public Set<String> getNonUpdatableFields(Tuple item);
+	
+	public static final AccessVerifier NOOP = new NoopVerifier();
+	
+	public Collection<String> getNonUpdatableFields(Tuple item);
 
-	public Set<String> getNonInsertableFields(Tuple item);
+	public Collection<String> getNonInsertableFields(Tuple item);
 
 	public boolean isInsertable(Tuple item);
 
 	public boolean isUpdatable(Tuple item);
 
 	public boolean isDeletable(Tuple item);
+	
+	public static class NoopVerifier implements AccessVerifier{		
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public Collection<String> getNonUpdatableFields(Tuple item) {
+			return Collections.EMPTY_LIST;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override		
+		public Collection<String> getNonInsertableFields(Tuple item) {
+			return Collections.EMPTY_LIST;
+		}
+
+		@Override
+		public boolean isInsertable(Tuple item) {
+			return true;
+		}
+
+		@Override
+		public boolean isUpdatable(Tuple item) {
+			return true;
+		}
+
+		@Override
+		public boolean isDeletable(Tuple item) {
+			return true;
+		}
+		
+	}
 }

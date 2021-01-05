@@ -17,9 +17,30 @@ package com.zitlab.palmyra.cinch.api2db.audit;
 
 public interface ChangeLogger {
 	
+	public static final ChangeLogger NOOP = new NoopChangeLogger();
+	
 	public void addLog(ChangeLog log);
 	
 	public void commit(String user);
 	
 	public void reset(String user);
+	
+	public static class NoopChangeLogger implements ChangeLogger{
+
+		@Override
+		public void addLog(ChangeLog log) {
+						
+		}
+
+		@Override
+		public void commit(String user) {
+						
+		}
+
+		@Override
+		public void reset(String user) {
+					
+		}
+		
+	}
 }

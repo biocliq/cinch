@@ -15,10 +15,10 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
@@ -40,11 +40,11 @@ import com.zitlab.palmyra.sqlbuilder.query.UpdateQuery;
 public class UpdateQueryHelper extends QueryHelper {
 	private static Logger logger = LoggerFactory.getLogger(UpdateQueryHelper.class);
 
-	private Set<String> excludeFields;
+	private Collection<String> excludeFields;
 	private ChangeLogger auditLogger;
 	private BiConsumer<String, String> verifier;
 
-	public UpdateQueryHelper(Set<String> excludeFields, ChangeLogger auditLogger) {
+	public UpdateQueryHelper(Collection<String> excludeFields, ChangeLogger auditLogger) {
 		this.excludeFields = excludeFields;
 		this.auditLogger = auditLogger;
 		this.verifier = (null == excludeFields || 0 == excludeFields.size()) ? NoopVerifier.instance()

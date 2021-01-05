@@ -15,10 +15,10 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
@@ -40,10 +40,10 @@ import com.zitlab.palmyra.sqlbuilder.query.InsertQuery;
 public class InsertQueryHelper extends QueryHelper {
 
 	private static Logger logger = LoggerFactory.getLogger(InsertQueryHelper.class);
-	private Set<String> excludeFields;
+	private Collection<String> excludeFields;
 	private BiConsumer<String, String> verifier;
 
-	public InsertQueryHelper(Set<String> excludeFields) {
+	public InsertQueryHelper(Collection<String> excludeFields) {
 		this.excludeFields = excludeFields;
 		this.verifier = (null == excludeFields || 0 == excludeFields.size()) ? NoopVerifier.instance()
 				: new ExcludeVerifier();

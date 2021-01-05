@@ -54,7 +54,7 @@ public class TupleDao extends RecordDao {
 
 	private static final Logger logger = LoggerFactory.getLogger(TupleDao.class);
 	private SchemaFactory configFactory;
-	private AccessVerifier accessVerifier;
+//	private AccessVerifier accessVerifier;
 	private String user;
 	private TupleFactory tupleFactory;
 
@@ -224,13 +224,21 @@ public class TupleDao extends RecordDao {
 		}
 	}
 
+	public void save(Tuple item) {
+		save(item, AccessVerifier.NOOP, ChangeLogger.NOOP);
+	}
+	
+	public void save(Tuple item, ChangeLogger changeLogger) {
+		save(item, AccessVerifier.NOOP, changeLogger);
+	}
+	
 	/**
 	 * This method shall only be called from TupleDataProcessor
 	 * 
 	 * @param item
 	 * @param changeLogger
 	 */
-	public void save(Tuple item, ChangeLogger changeLogger) {
+	public void save(Tuple item, AccessVerifier accessVerifier, ChangeLogger changeLogger) {
 
 		// retrieve cfgItemtype structure from the cache
 		TupleType tupleType = item.getTupleType();
@@ -251,7 +259,7 @@ public class TupleDao extends RecordDao {
 				item.removeAttribute("createdOn");
 				item.removeAttribute("lastUpdOn");
 				item.removeAttribute("lastUpdBy");
-				update(item, dbItem, changeLogger);
+				update(item, dbItem,accessVerifier, changeLogger);
 			} else {
 				Date upd = new Date();
 				if (null != tupleType.getField("createdBy")) {
@@ -261,7 +269,7 @@ public class TupleDao extends RecordDao {
 					item.setAttribute("lastUpdBy", getUser());
 				}
 				item.setActionCode(Action.CREATE);
-				insertInternal(item);
+				insertInternal(item, accessVerifier);
 				item.setDbTuple(item);
 			}
 
@@ -275,7 +283,7 @@ public class TupleDao extends RecordDao {
 		return user;
 	}
 
-	private void update(Tuple item, Tuple dbItem, ChangeLogger auditLogger) {
+	private void update(Tuple item, Tuple dbItem, AccessVerifier accessVerifier, ChangeLogger auditLogger) {
 		TupleType tupleType = item.getTupleType();
 		UpdateQueryHelper updateQueryHelper = new UpdateQueryHelper(accessVerifier.getNonUpdatableFields(item),
 				auditLogger);
@@ -286,7 +294,7 @@ public class TupleDao extends RecordDao {
 		}
 	}
 
-	private void insertInternal(Tuple item) {
+	private void insertInternal(Tuple item, AccessVerifier accessVerifier) {
 		TupleType tupleType = item.getTupleType();
 		if (tupleType.hasSeqField() && null == item.getAttribute(tupleType.getSeqFieldName())) {
 			String assetTag = getNextCITag(item);
@@ -327,9 +335,5 @@ public class TupleDao extends RecordDao {
 
 		String key = new SimpleKeyGenerator().generateKey(type.getSeqFormat(), nextValue);
 		return key;
-	}
-
-	public void setAccessVerifier(AccessVerifier accessVerifier) {
-		this.accessVerifier = accessVerifier;
 	}
 }
