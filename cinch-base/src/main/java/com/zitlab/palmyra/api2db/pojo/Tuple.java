@@ -29,6 +29,7 @@ import java.util.Map;
 import com.zitlab.palmyra.api2db.core.security.AclFieldRight;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 import com.zitlab.palmyra.api2db.pojo.impl.RecordImpl;
+import com.zitlab.palmyra.util.TupleIDMapper;
 
 /**
  * The base class for all the data operations. This class will carry the
@@ -84,11 +85,19 @@ public class Tuple extends RecordImpl implements Serializable{
 	}
 
 	public Object getId() {
-		return this.id;
+		if (null != tupleType)
+			return TupleIDMapper.getId(this, tupleType);
+		else
+			return this.id;
 	}
 
 	public void setId(Object id) {
-		this.id = id;
+		if (null == tupleType)
+			this.id = id;
+		else {
+			this.id = null;
+			TupleIDMapper.setId(this, tupleType, id);
+		}
 	}
 
 	public Map<String, Tuple> getParent() {
