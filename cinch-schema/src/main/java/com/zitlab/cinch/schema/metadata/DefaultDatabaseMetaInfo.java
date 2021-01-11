@@ -35,24 +35,14 @@ public class DefaultDatabaseMetaInfo implements DatabaseMetaInfo {
 	}
 
 	@Override
-	public Map<String, TupleType> getTupleTypes(String schema) throws SQLException {
+	public Map<String, TupleType> getTupleTypes(List<String> schemas) throws SQLException {
 		Connection con = ds.getConnection();
 		DatabaseMetaData dbmd = con.getMetaData();
 		MetaDataUtil metadataUtil = new MetaDataUtil(dbmd);
-		Map<String, TupleType> tables = metadataUtil.getAllTablesAsMap(schema);
+		Map<String, TupleType> tables = metadataUtil.getAllTablesAsMap(schemas);
 		Map<String, TupleType> result = new HashMap<String, TupleType>();
 		for (TupleType table : tables.values()) {
 			result.put(table.getName(), table);
-		}
-		return result;
-	}
-
-	@Override
-	public Map<String, TupleType> getTupleTypes(List<String> schemas) throws SQLException {
-		Map<String, TupleType> result = new HashMap<String, TupleType>();
-		for (String schema : schemas) {
-			Map<String, TupleType> tables = getTupleTypes(schema);
-			result.putAll(tables);
 		}
 		return result;
 	}

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,23 +47,26 @@ public class MetaDataUtil {
 		this.provider = MetaDataProviderFactory.getMetaDataProvider(dbmd);
 	}
 
-	public Map<String, TupleType> getAllTablesAsMap(String schema) {
+	public Map<String, TupleType> getAllTablesAsMap(List<String> schemas) {
 		ResultSet rs = null;
 
 		Map<String, TupleType> tables = new HashMap<String, TupleType>();
 		try {
-			rs = provider.getTables(schema, "%");// dbmd.getTables(null, schema, "%", types);
-			while (rs.next()) {
-				String tableName = rs.getString(3).trim();
-				String ciName = TextUtil.camelCase(tableName, true);
-				TupleType table = new TupleType(tableName,ciName, true);
-				table.setSchema(schema);
-				tables.put(getKey(schema, table.getTable()), table);
+			for (String schema : schemas) {
+				rs = provider.getTables(schema, "%");// dbmd.getTables(null, schema, "%", types);
+				while (rs.next()) {
+					String tableName = rs.getString(3).trim();
+					String ciName = TextUtil.camelCase(tableName, true);
+					TupleType table = new TupleType(tableName, ciName, true);
+					table.setSchema(schema);
+					tables.put(getKey(schema, table.getTable()), table);
+				}
+				getColumns(schema, tables);
+				getPrimaryKeys(schema, tables);
+				getUniqueIdx(schema, tables);
 			}
-			getColumns(schema, tables);
-			getPrimaryKeys(schema, tables);
-			getForeginKeys(schema, tables);
-			getUniqueIdx(schema, tables);
+			getForeginKeys(schemas, tables);
+
 		} catch (SQLException e) {
 			logger.error("Error while retriving table Information", e);
 			throw new RuntimeException(e);
@@ -97,15 +101,7 @@ public class MetaDataUtil {
 		}
 	}
 
-//	private void printMetadata(ResultSet rs) throws SQLException {
-//		ResultSetMetaData rsmd = rs.getMetaData();
-//		int cnt = rsmd.getColumnCount();
-//		for (int i = 1; i <= cnt; i++) {
-//			System.out.println(rsmd.getColumnLabel(i));
-//		}
-//	}
-
-	private void getForeginKeys(String schema, Map<String, TupleType> tables) {
+	private void getForeginKeys(List<String> schemas, Map<String, TupleType> tables) {
 		ResultSet rs = null;
 		ForeignKey fkey = null;
 		TupleType srcTupleType = null;
@@ -119,49 +115,50 @@ public class MetaDataUtil {
 		Map<String, ForeignKey> keyMap = null;
 
 		try {
-			rs = provider.getImportedKeys(null, schema, "%");
-		
-			while (rs.next()) {
-				fKeyName = rs.getString("FK_NAME");
-				srcTableName = rs.getString("FKTABLE_NAME");
-				tgtTableName = rs.getString("PKTABLE_NAME");
+			for (TupleType table : tables.values()) {
+				String schema = table.getSchema();
+				rs = provider.getImportedKeys(null, schema, table.getTable());
 
-				srcTupleType = tables.get(getKey(schema, srcTableName));
-				if (null != srcTupleType)
-					sourceAttrib = srcTupleType.getFieldByColumn(rs.getString("FKCOLUMN_NAME"));
-
-				if (null != sourceAttrib) {
-					keyMap = srcTupleType.getForeignKeyMap();
-					fkey = keyMap.get(fKeyName);
+				while (rs.next()) {
+					fKeyName = rs.getString("FK_NAME");
+					srcTableName = rs.getString("FKTABLE_NAME");
 					tgtTableName = rs.getString("PKTABLE_NAME");
 
-					int index = tgtTableName.indexOf("_statecode_");
-					if (index > 0)
-						tgtTableName = tgtTableName.substring(0, index);
-					tgtSchema = rs.getString("PKTABLE_SCHEM");
+					srcTupleType = tables.get(getKey(schema, srcTableName));
+					if (null != srcTupleType)
+						sourceAttrib = srcTupleType.getFieldByColumn(rs.getString("FKCOLUMN_NAME"));
 
-					tgtTupleType = tables.get(getKey(tgtSchema, tgtTableName));
-					;
-					if (null == fkey) {
-						fkey = new ForeignKey();
-						fkey.setTargetSchema(tgtSchema);
-						if (null != tgtTupleType) {
-							fkey.setTargetTable(tgtTupleType.getTable());
-							fkey.setTargetType(tgtTupleType);
+					if (null != sourceAttrib) {
+						keyMap = srcTupleType.getForeignKeyMap();
+						fkey = keyMap.get(fKeyName);
+						tgtTableName = rs.getString("PKTABLE_NAME");
+
+						int index = tgtTableName.indexOf("_statecode_");
+						if (index > 0)
+							tgtTableName = tgtTableName.substring(0, index);
+						tgtSchema = rs.getString("PKTABLE_SCHEM");
+
+						tgtTupleType = tables.get(getKey(tgtSchema, tgtTableName));
+						;
+						if (null == fkey) {
+							fkey = new ForeignKey();
+							fkey.setTargetSchema(tgtSchema);
+							if (null != tgtTupleType) {
+								fkey.setTargetTable(tgtTupleType.getTable());
+								fkey.setTargetType(tgtTupleType);
+								targetAttrib = tgtTupleType.getFieldByColumn(rs.getString("PKCOLUMN_NAME"));
+								fkey.addMapping(srcTableName, sourceAttrib, targetAttrib);
+								keyMap.put(fKeyName, fkey);
+							} else {
+								logger.error("getForeignKeys : Foreignkey table {} not found for the key {}",
+										getKey(tgtSchema, tgtTableName), fKeyName);
+							}
+						} else {
 							targetAttrib = tgtTupleType.getFieldByColumn(rs.getString("PKCOLUMN_NAME"));
 							fkey.addMapping(srcTableName, sourceAttrib, targetAttrib);
-							keyMap.put(fKeyName, fkey);
-						} else {
-							logger.error("getForeignKeys : Foreignkey table {} not found for the key {}",
-									getKey(tgtSchema, tgtTableName), fKeyName);
 						}
-					} else {
-						targetAttrib = tgtTupleType.getFieldByColumn(rs.getString("PKCOLUMN_NAME"));
-						fkey.addMapping(srcTableName, sourceAttrib, targetAttrib);
 					}
 				}
-			}
-			for(TupleType table: tables.values()) {
 				table.refactorForeignKey();
 			}
 		} catch (SQLException e) {

@@ -25,7 +25,6 @@ import javax.sql.DataSource;
 import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
 
 public interface DatabaseMetaInfo {
-	public Map<String, TupleType> getTupleTypes(String schema) throws SQLException;
 	
 	public Map<String, TupleType> getTupleTypes(List<String> schemas) throws SQLException;
 	
