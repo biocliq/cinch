@@ -65,8 +65,8 @@ public abstract class Query<T extends Table<? extends Column>>{
 		return this.tableLookup;
 	}
 
-	protected int appendColumns(StringBuilder sb, T table, int offset) {
-		return table.append(sb, offset);
+	protected void appendColumns(StringBuilder sb, T table, Counter counter) {
+		table.append(sb, counter);
 	}
 	
 	protected int appendColumns(StringBuilder sb, T table, int offset, int limit) {

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.query;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.condition.SqlQueryException;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
@@ -29,13 +31,13 @@ public class UpdateQuery<T extends Table<? extends Column>> extends Query<T>{
 	public String getQuery() {
 		if(0 == table.getColumns().size())
 			return null;
-		
+		Counter counter = new Counter(0);
 		StringBuilder sb = StringBuilderCache.get();
 		sb.append("UPDATE ");
 		table.appendName(sb);
 		sb.append(table.getQueryAlias());
 		sb.append(" SET ");
-		appendColumns(sb, table,1);
+		appendColumns(sb, table,counter);
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append(" WHERE ");
 		addConditions(sb);
@@ -59,20 +61,12 @@ public class UpdateQuery<T extends Table<? extends Column>> extends Query<T>{
 	}
 
 	@Override
-	protected int appendColumns(StringBuilder sb, T table, int rsIndex) {
-//		List<? extends Column> columns = table.getColumns();
-//		int size = columns.size();
-//		Column column;
-//		for (int index=0; index < size; index++) {
-//			column = columns.get(index);
-//			column.setRsIndex(rsIndex++);
-//			sb.append(column.getName()).append("=?,");
-//		}
-//		return rsIndex;
-		for(Column column : table.getColumns()) {
-			column.setRsIndex(rsIndex++);
+	protected void appendColumns(StringBuilder sb, T table, Counter counter) {		
+		List<? extends Column> columns = table.getColumns();
+		
+		columns.forEach((column) -> {
+			column.setRsIndex(counter.increment());
 			sb.append(column.getName()).append("=?,");
-		}
-		return rsIndex;
+		});
 	}
 }

@@ -176,15 +176,17 @@ public class SelectQuery<T extends Table<? extends Column>> extends Query<T> {
 		}
 	}
 
-	private void appendColumns(StringBuilder sb) {
-		int rsIndex = 1;
-		rsIndex = this.appendColumns(sb, this.table, rsIndex);
-		for (Join<T> join : this.joinMap.values()) {
-			rsIndex = this.appendColumns(sb, join.table, rsIndex);
-		}
+
+	private void appendColumns(StringBuilder sb) {	
+		Counter counter = new Counter(0);
+		this.appendColumns(sb, this.table, counter);
+		
+		joinMap.forEach((key, join) -> {
+			this.appendColumns(sb, join.table, counter);
+		});
 		sb.deleteCharAt(sb.length() - 1);
 	}
-
+	
 	private void appendColumnforCountQuery(StringBuilder sb) {
 		int rsIndex = 1;
 		rsIndex = this.appendColumns(sb, this.table, rsIndex, 1);

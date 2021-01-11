@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.query;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 
@@ -27,10 +29,11 @@ public class InsertQuery<T extends Table<? extends Column>> extends Query<T>{
 	@Override
 	public String getQuery() {
 		StringBuilder sb = StringBuilderCache.get();
+		Counter counter = new Counter(0);
 		sb.append("INSERT INTO ");
 		table.appendName(sb);
 		sb.append(" (");
-		appendColumns(sb, table, 1);
+		appendColumns(sb, table, counter);
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append(") VALUES (");
 		int length = table.getColumns().size();
@@ -44,12 +47,12 @@ public class InsertQuery<T extends Table<? extends Column>> extends Query<T>{
 	}
 
 	@Override
-	protected int appendColumns(StringBuilder sb, T table, int rsIndex) {
-		for (Column column : table.getColumns()) {
-			column.setRsIndex(rsIndex++);
+	protected void appendColumns(StringBuilder sb, T table, Counter counter) {
+		List<? extends Column> columns = table.getColumns();
+		columns.forEach((column) -> {
+			column.setRsIndex(counter.increment());
 			sb.append(column.getName()).append(",");
-		}
-		return rsIndex;
+		});
 	}
 	
 	public void addCondition(Condition cond) {

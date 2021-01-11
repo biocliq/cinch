@@ -55,22 +55,16 @@ public class Table<T extends Column> {
 		return columns;
 	}
 
-	public final int append(StringBuilder sb, int offset) {
-		ArrayList<T> cols = columns;
-		int size = cols.size();
-		
-		for (int index =0; index < size; index++) {
-			T col = cols.get(index);
-			col.setRsIndex(offset++);
+	public final void append(StringBuilder sb, Counter counter) {
+		columns.forEach((col) ->{
+			col.setRsIndex(counter.increment());
 			if (col.isColumn) {
 				sb.append(queryAlias).append('.');
 			}
 			sb.append(col.name).append(' ');
-			sb.append(queryAlias).append('_');
 			sb.append(col.alias);
 			sb.append(',');
-		}
-		return offset;
+		});
 	}
 	
 	public final int append(StringBuilder sb, int offset, int limit) {
