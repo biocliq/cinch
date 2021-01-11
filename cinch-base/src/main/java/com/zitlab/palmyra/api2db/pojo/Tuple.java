@@ -44,7 +44,11 @@ public class Tuple extends RecordImpl implements Serializable{
 
 	private static final long serialVersionUID = 1659792920242277041L;
 
-	private boolean dbExists = false;
+	public static final int DB_UNKNOWN = 0;
+	public static final int DB_NOT_EXISTS = 1;
+	public static final int DB_EXISTS = 2;
+
+	private int dbExists = DB_UNKNOWN;
 
 	private String preferredKey;
 
@@ -161,11 +165,11 @@ public class Tuple extends RecordImpl implements Serializable{
 		this.type = metainfo.getType();
 	}
 
-	public boolean isDbExists() {
+	public int isDbExists() {
 		return dbExists;
 	}
 
-	public void setDbExists(boolean dbExists) {
+	public void setDbExists(int dbExists) {
 		this.dbExists = dbExists;
 	}
 
@@ -238,7 +242,7 @@ public class Tuple extends RecordImpl implements Serializable{
 
 	public void setDbTuple(Tuple dbTuple) {
 		this.dbTuple = dbTuple;
-		this.dbExists = (null != dbTuple);
+		this.dbExists = (null != dbTuple) ? DB_EXISTS : DB_NOT_EXISTS;
 	}
 
 	public Object removeParentAttribute(String attribute) {
@@ -308,7 +312,7 @@ public class Tuple extends RecordImpl implements Serializable{
 		this.parentMap.clear();
 		this.childrenMap.clear();
 		this.dbTuple = null;
-		this.dbExists = false;
+		this.dbExists = DB_UNKNOWN;
 		this.id = null;
 	}
 

@@ -17,6 +17,8 @@
 package com.zitlab.palmyra.cinch.tuple.dao;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,7 @@ public class TupleDao extends RecordDao {
 //	private AccessVerifier accessVerifier;
 	private String user;
 	private TupleFactory tupleFactory;
+	private static final List<Tuple> EMPTY_RESULT = Collections.unmodifiableList(new ArrayList<Tuple>());
 
 	public TupleDao(SchemaFactory configFactory, DataSource ds, String user) {
 		super(new QueryFactory(ds));
@@ -183,28 +186,21 @@ public class TupleDao extends RecordDao {
 		} else {
 			if (logger.isTraceEnabled())
 				logger.trace("Search By key - Query not generated for item {}", item.getType());
-			return null;
+			return EMPTY_RESULT;
 		}
 	}
 
 	public Tuple getUniqueItem(Tuple item, TupleFilter filter) {
-		Tuple result = null;
 		List<Tuple> items = searchByKey(item, filter);
-		if (null != items) {
-			if (items.size() == 1) {
-				result = items.get(0);
-			} else if (items.size() > 1) {
-				TupleType tupleType = item.getTupleType();
-				// TODO add logic to provide list of unique keys/values in the error message;
-				throw new MultipleTuplesExistsException(tupleType.getName(),
-						items.size() + " records has been found for the given type " + tupleType.getName());
-			} else if (0 == items.size()) {
-				return null;
-			}
+		if (1 == items.size()) {
+			return items.get(0);
+		} else if (0 == items.size()) {
+			return null;
+		} else {
+			TupleType tupleType = item.getTupleType();
+			throw new MultipleTuplesExistsException(tupleType.getName(),
+					items.size() + " records has been found for the given type " + tupleType.getName());
 		}
-		// This statement will be reached if no unique keys are present in the item.
-		// TODO Add a log statement ??
-		return result;
 	}
 
 	public Tuple getUniqueItem(TupleType ttype, String key, Object value, TupleFilter filter) {
@@ -246,12 +242,12 @@ public class TupleDao extends RecordDao {
 		if (null != tupleType) {
 			Tuple dbItem = item.getDbTuple();
 
-			if (null == dbItem) {
+			if (null == dbItem && item.isDbExists() == Tuple.DB_UNKNOWN) {
 				Object id = item.getId();
 				if (null != id)
 					dbItem = getById(tupleType, id, null);
-//				else
-//					dbItem = getUniqueItem(item, null);
+				else
+					dbItem = getUniqueItem(item, null);
 			}
 			if (null != dbItem) {
 				item.setActionCode(Action.UPDATE);
@@ -276,7 +272,6 @@ public class TupleDao extends RecordDao {
 		} else {
 			throw new RuntimeException("CI Type " + item.getType() + " not found in configuration");
 		}
-		item.setDbExists(true);
 	}
 
 	private String getUser() {	
