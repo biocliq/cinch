@@ -17,8 +17,8 @@ package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
 import java.util.List;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.ForeignKey;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
+import com.zitlab.palmyra.cinch.dbmeta.ForeignKey;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 
 public class JoinHelper extends ClauseHelper{

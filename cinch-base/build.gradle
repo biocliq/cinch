@@ -5,5 +5,5 @@ plugins {
 }
 
 dependencies { 
-
+	implementation deps.com.github.jsqlparser
 }

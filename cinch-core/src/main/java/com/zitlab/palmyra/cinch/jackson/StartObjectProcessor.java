@@ -3,9 +3,8 @@ package com.zitlab.palmyra.cinch.jackson;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 public class StartObjectProcessor implements TokenProcessor {
 

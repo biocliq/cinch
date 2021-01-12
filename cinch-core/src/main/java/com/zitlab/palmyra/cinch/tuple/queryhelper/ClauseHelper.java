@@ -17,13 +17,13 @@ package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
 import java.util.Map.Entry;
 
-import com.zitlab.palmyra.api2db.exception.DataValidationException;
-import com.zitlab.palmyra.api2db.exception.FieldValidationException;
-import com.zitlab.palmyra.api2db.exception.Validation;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.FieldList;
-import com.zitlab.palmyra.api2db.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.exception.DataValidationException;
+import com.zitlab.palmyra.cinch.exception.FieldValidationException;
+import com.zitlab.palmyra.cinch.exception.Validation;
+import com.zitlab.palmyra.cinch.pojo.FieldList;
+import com.zitlab.palmyra.cinch.pojo.TupleFilter;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 import com.zitlab.palmyra.util.TextUtil;

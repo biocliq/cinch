@@ -18,10 +18,10 @@ package com.zitlab.palmyra.cinch.tuple.queryhelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.schema.SchemaFactory;
-import com.zitlab.palmyra.cinch.api2db.audit.ChangeLogger;
+import com.zitlab.palmyra.cinch.core.audit.ChangeLogger;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 import com.zitlab.palmyra.sqlbuilder.query.DeleteQuery;

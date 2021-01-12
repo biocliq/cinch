@@ -23,13 +23,13 @@ import org.simpleflatmapper.util.CheckedConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.palmyra.api2db.pojo.GenericItem;
-import com.zitlab.palmyra.api2db.pojo.NativeQuery;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.TupleResultSet;
 import com.zitlab.palmyra.cinch.dao.RecordDao;
-import com.zitlab.palmyra.cinch.query.QueryFactory;
-import com.zitlab.palmyra.cinch.rshandler.ListHandler;
+import com.zitlab.palmyra.cinch.dao.query.QueryFactory;
+import com.zitlab.palmyra.cinch.dao.rshandler.ListHandler;
+import com.zitlab.palmyra.cinch.pojo.GenericItem;
+import com.zitlab.palmyra.cinch.pojo.NativeQuery;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.pojo.TupleResultSet;
 import com.zitlab.palmyra.cinch.tuple.resulthandler.GenericResultHandler;
 import com.zitlab.palmyra.cinch.tuple.resulthandler.GenericRowCallbackHandler;
 

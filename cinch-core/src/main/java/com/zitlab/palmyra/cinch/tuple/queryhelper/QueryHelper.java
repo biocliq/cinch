@@ -20,8 +20,8 @@ import java.sql.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 import com.zitlab.palmyra.sqlbuilder.condition.BetweenCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.BinaryCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;

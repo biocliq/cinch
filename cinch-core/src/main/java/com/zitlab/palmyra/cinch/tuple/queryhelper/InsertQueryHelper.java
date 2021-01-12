@@ -24,14 +24,14 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.palmyra.api2db.exception.FieldValidationException;
-import com.zitlab.palmyra.api2db.exception.Validation;
-import com.zitlab.palmyra.api2db.pdbc.pojo.ForeignKey;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.schema.SchemaFactory;
+import com.zitlab.palmyra.cinch.dbmeta.ForeignKey;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.exception.FieldValidationException;
 import com.zitlab.palmyra.cinch.exception.RecordException;
+import com.zitlab.palmyra.cinch.exception.Validation;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.cinch.tuple.dao.TupleDao;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
@@ -80,7 +80,7 @@ public class InsertQueryHelper extends QueryHelper {
 				ForeignKey fKey = tupleType.getForeignKey(key);
 				// Verify mandatory parameter
 				if (null != refItem && null != refItem.getId() && null != fKey) {
-					if (refItem.isDbExists()) {
+					if (refItem.isDbExists() == Tuple.DB_EXISTS) {
 						List<TupleAttribute> srcAttrs = fKey.getSource();
 						List<TupleAttribute> tgtAttrs = fKey.getTarget();
 						TupleAttribute tgtAttrib;

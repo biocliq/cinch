@@ -15,10 +15,10 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.palmyra.api2db.exception.DDMException;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.schema.Schema;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.exception.DDMException;
+import com.zitlab.palmyra.cinch.schema.Schema;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
 import com.zitlab.palmyra.util.StringBuilderCache;
 

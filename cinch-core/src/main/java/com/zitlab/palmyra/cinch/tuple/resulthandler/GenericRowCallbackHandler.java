@@ -25,9 +25,8 @@ import java.util.Base64;
 
 import org.simpleflatmapper.util.CheckedConsumer;
 
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.cinch.rshandler.RowCallbackHandler;
+import com.zitlab.palmyra.cinch.dao.rshandler.RowCallbackHandler;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 public class GenericRowCallbackHandler implements RowCallbackHandler{
 		

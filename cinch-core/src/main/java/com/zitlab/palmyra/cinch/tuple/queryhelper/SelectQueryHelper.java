@@ -15,11 +15,11 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.TupleFilter;
-import com.zitlab.palmyra.api2db.schema.Schema;
-import com.zitlab.palmyra.api2db.schema.SchemaFactory;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.schema.Schema;
+import com.zitlab.palmyra.cinch.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.sqlbuilder.condition.CustomCondition;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;

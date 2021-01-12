@@ -3,7 +3,7 @@ package com.zitlab.palmyra.cinch.jackson;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 public class NullProcessor implements TokenProcessor {
 

@@ -20,4 +20,7 @@ dependencies {
 	implementation deps.org.sfm.jdbc
 	implementation deps.apache.commons.dbcp2
 	implementation deps.jdbc.mariadb
+	implementation deps.jdbc.pgsql
+	
+	
 }

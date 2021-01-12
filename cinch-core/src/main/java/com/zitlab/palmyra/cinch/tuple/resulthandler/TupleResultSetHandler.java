@@ -18,8 +18,8 @@ package com.zitlab.palmyra.cinch.tuple.resulthandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.dao.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 /**
  * @author ksvraja

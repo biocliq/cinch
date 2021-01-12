@@ -15,8 +15,8 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.converter.Converter;
+import com.zitlab.palmyra.cinch.converter.Converter;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 
 public class Column extends com.zitlab.palmyra.sqlbuilder.query.Column{
 	private Converter<?> converter;

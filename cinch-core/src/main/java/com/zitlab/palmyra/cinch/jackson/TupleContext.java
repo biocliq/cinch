@@ -2,8 +2,8 @@ package com.zitlab.palmyra.cinch.jackson;
 
 import java.util.ArrayList;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 class TupleContext {
 	private Tuple tuple;

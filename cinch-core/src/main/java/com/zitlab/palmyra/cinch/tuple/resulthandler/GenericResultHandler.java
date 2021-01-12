@@ -23,8 +23,8 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Base64;
 
-import com.zitlab.palmyra.api2db.pojo.GenericItem;
-import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.dao.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.pojo.GenericItem;
 
 public class GenericResultHandler implements ResultSetHandler<GenericItem>{
 	

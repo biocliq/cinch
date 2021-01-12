@@ -15,7 +15,7 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 
 public class Table extends com.zitlab.palmyra.sqlbuilder.query.Table<Column>{
 

@@ -17,7 +17,7 @@ package com.zitlab.palmyra.cinch.tuple.dao;
 
 import org.simpleflatmapper.util.CheckedConsumer;
 
-import com.zitlab.palmyra.api2db.pojo.TupleResultSet;
+import com.zitlab.palmyra.cinch.pojo.TupleResultSet;
 
 public interface ResultProcessor<T> extends CheckedConsumer<T>{
 

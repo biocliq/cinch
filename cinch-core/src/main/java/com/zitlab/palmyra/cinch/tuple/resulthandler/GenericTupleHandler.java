@@ -19,10 +19,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
-import com.zitlab.palmyra.converter.Converter;
+import com.zitlab.palmyra.cinch.converter.Converter;
+import com.zitlab.palmyra.cinch.dao.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 public class GenericTupleHandler implements ResultSetHandler<Tuple>{
 	

@@ -8,9 +8,9 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.cinch.rshandler.TupleFactory;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.tuple.dao.TupleFactory;
 
 public class TupleDeserializer {
 	

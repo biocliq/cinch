@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleRelation;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
+import com.zitlab.palmyra.cinch.dbmeta.TupleRelation;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
 
 public class StartArrayProcessor implements TokenProcessor {
 

@@ -22,11 +22,12 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.ForeignKey;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
-import com.zitlab.palmyra.api2db.pojo.Tuple;
-import com.zitlab.palmyra.api2db.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.dbmeta.ForeignKey;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.dbmeta.UniqueKey;
+import com.zitlab.palmyra.cinch.pojo.Tuple;
+import com.zitlab.palmyra.cinch.pojo.TupleFilter;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
@@ -51,7 +52,7 @@ class UniqueQueryHelper extends AppendColumnHelper {
 		TupleType tupleType = item.getTupleType();
 		ArrayList<Object> valueList = new ArrayList<Object>();
 
-		Map<String, TupleAttribute> uniqueKeyList = null;
+		UniqueKey uniqueKeyList = null;
 		String key = null;
 		String preferredKey = item.getPreferredKey();
 		String tableName = tupleType.getTable();
@@ -70,7 +71,7 @@ class UniqueQueryHelper extends AppendColumnHelper {
 		}
 
 		if (null == uniqueKeyList || 0 == condition.count()) {
-			for (Entry<String, Map<String, TupleAttribute>> entry : tupleType.getUniqueKeyMap().entrySet()) {
+			for (Entry<String, UniqueKey> entry : tupleType.getUniqueKeyMap().entrySet()) {
 				key = entry.getKey();
 				if (!key.equals("primaryKey")) {
 					uniqueKeyList = entry.getValue();
@@ -110,7 +111,7 @@ class UniqueQueryHelper extends AppendColumnHelper {
 		return params;
 	}
 
-	private void addByUniqueKey(String key, Map<String, TupleAttribute> uniqueKeyList, TupleType tupleType, Tuple item,
+	private void addByUniqueKey(String key, UniqueKey uniqueKeyList, TupleType tupleType, Tuple item,
 			Table rootTable, SelectQuery<Table> query, ComboCondition condition, ArrayList<Object> valueList) {
 
 		// Within the Unique keys, search by AND for all the unique key columns
@@ -122,11 +123,11 @@ class UniqueQueryHelper extends AppendColumnHelper {
 		int fkeyCount;
 
 		// For each unique key combination
-		for (Entry<String, TupleAttribute> uniqueKey : uniqueKeyList.entrySet()) {
+		for (Entry<String, TupleAttribute> uniqueKeyAttributes : uniqueKeyList.getColumns().entrySet()) {
 			// Add the unique key attribute
-			ds = uniqueKey.getKey();
+			ds = uniqueKeyAttributes.getKey();
 			logger.trace("Processing the key {} with the field {}", key, ds);
-			TupleAttribute tupleAttribute = uniqueKey.getValue();
+			TupleAttribute tupleAttribute = uniqueKeyAttributes.getValue();
 
 			// If the unique key attribute is present in incoming object it will be added
 			// here.
@@ -197,8 +198,8 @@ class UniqueQueryHelper extends AppendColumnHelper {
 			// TODO this section shall be revisited based on the later requirements.
 			for (String uqkey : subTableType.getUQKeyList()) {
 				subTableCondition = new ComboCondition(Op.AND);
-				Map<String, TupleAttribute> subKeyMap = subTableType.getUniqueKey(uqkey);
-				for (TupleAttribute subTableAttribute : subKeyMap.values()) {
+				UniqueKey subKeyMap = subTableType.getUniqueKey(uqkey);
+				for (TupleAttribute subTableAttribute : subKeyMap.getColumns().values()) {
 					attribName = subTableAttribute.getAttribute();
 					subValue = refItem.getAttribute(attribName);
 					if (null != subValue) {

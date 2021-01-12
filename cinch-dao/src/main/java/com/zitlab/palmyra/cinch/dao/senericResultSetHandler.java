@@ -26,7 +26,7 @@ import java.util.Date;
 
 import org.sql2o.ResultSetHandler;
 
-import com.zitlab.palmyra.api2db.pojo.GenericItem;
+import com.zitlab.palmyra.cinch.pojo.GenericItem;
 
 public class senericResultSetHandler implements ResultSetHandler<GenericItem> {
 	public final SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");

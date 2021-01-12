@@ -19,8 +19,8 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.converter.Converter;
+import com.zitlab.palmyra.cinch.converter.Converter;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 
 public class DataList extends ArrayList<Object> {
 	private static final long serialVersionUID = 1L;

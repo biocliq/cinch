@@ -18,8 +18,8 @@ package com.zitlab.palmyra.cinch.tuple.queryhelper;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleAttribute;
-import com.zitlab.palmyra.api2db.pdbc.pojo.TupleType;
+import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
+import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.condition.CustomCondition;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;

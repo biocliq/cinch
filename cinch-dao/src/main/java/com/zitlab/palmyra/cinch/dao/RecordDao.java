@@ -22,12 +22,12 @@ import javax.sql.DataSource;
 
 import org.simpleflatmapper.util.CheckedConsumer;
 
-import com.zitlab.palmyra.api2db.pojo.NativeQuery;
-import com.zitlab.palmyra.cinch.query.Query;
-import com.zitlab.palmyra.cinch.query.QueryFactory;
-import com.zitlab.palmyra.cinch.query.QueryOptions;
-import com.zitlab.palmyra.cinch.rshandler.ResultSetHandler;
-import com.zitlab.palmyra.cinch.rshandler.RowCallbackHandler;
+import com.zitlab.palmyra.cinch.dao.query.Query;
+import com.zitlab.palmyra.cinch.dao.query.QueryFactory;
+import com.zitlab.palmyra.cinch.dao.rshandler.ResultSetHandler;
+import com.zitlab.palmyra.cinch.dao.rshandler.RowCallbackHandler;
+import com.zitlab.palmyra.cinch.pojo.NativeQuery;
+import com.zitlab.palmyra.cinch.pojo.QueryOptions;
 
 
 /**
