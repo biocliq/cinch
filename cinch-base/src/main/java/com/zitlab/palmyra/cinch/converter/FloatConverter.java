@@ -37,6 +37,9 @@ public class FloatConverter implements Converter<Float>{
 
 	@Override
 	public Float convert(Object obj) {
+		if(null == obj)
+			return null;
+		
 		if(obj instanceof Float) {
 			return (Float) obj;
 		}else {

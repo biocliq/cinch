@@ -1,22 +1,6 @@
-/*******************************************************************************
- * Copyright 2020 BioCliq Technologies
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
-package com.zitlab.palmyra.cinch.dao.quirks.pgsql;
+package com.zitlab.palmyra.cinch.quirks;
 
 import java.io.InputStream;
-import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -30,29 +14,35 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.sql2o.converters.Convert;
-import org.sql2o.converters.Converter;
-import org.sql2o.quirks.Quirks;
-import org.sql2o.quirks.parameterparsing.SqlParameterParsingStrategy;
-import org.sql2o.quirks.parameterparsing.impl.DefaultSqlParameterParsingStrategy;
+import com.zitlab.palmyra.cinch.converter.Convert;
+import com.zitlab.palmyra.cinch.converter.Converter;
 
-@SuppressWarnings("rawtypes")
-public class PgQuirks implements Quirks{
+/**
+ * @author aldenquimby@gmail.com
+ * @since 4/6/14
+ */
+public class NoQuirks implements Quirks {
     protected final Map<Class,Converter>  converters;
-    private final SqlParameterParsingStrategy sqlParameterParsingStrategy = new DefaultSqlParameterParsingStrategy();
 
-    public PgQuirks(Map<Class, Converter> converters) {    
+    public NoQuirks(Map<Class, Converter> converters) {
+        // protective copy
+        // to avoid someone change this collection outside
+        // so this makes converters thread-safe
         this.converters = new HashMap<Class, Converter>(converters);
     }
 
-    public PgQuirks() {
+    public NoQuirks() {
         this(Collections.<Class,Converter>emptyMap());
     }
-    
+
     @SuppressWarnings("unchecked") @Override
     public <E> Converter<E> converterOf(Class<E> ofClass) {
+        // if nobody change this collection outside constructor
+        // it's thread-safe
         Converter c =  converters.get(ofClass);
+        // if no "local" converter let's look in global
         return c!=null?c:Convert.getConverterIfExists(ofClass);
+
     }
 
     @Override
@@ -82,10 +72,10 @@ public class PgQuirks implements Quirks{
 
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, Integer value) throws SQLException {
-        if (null != value) {
-        	statement.setInt(paramIdx, value);
+        if (value == null) {
+            statement.setNull(paramIdx, Types.INTEGER);
         } else {
-        	statement.setNull(paramIdx, Types.INTEGER);
+            statement.setInt(paramIdx, value);
         }
     }
 
@@ -96,65 +86,48 @@ public class PgQuirks implements Quirks{
 
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, Long value) throws SQLException {
-        if (null != value) {
-        	statement.setLong(paramIdx, value);
+        if (value == null) {
+            statement.setNull(paramIdx, Types.BIGINT);
         } else {
-        	statement.setNull(paramIdx, Types.BIGINT);
+            statement.setLong(paramIdx, value);
         }
     }
 
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, String value) throws SQLException {
-        if (null != value) {
-        	statement.setString(paramIdx, value);
+        if (value == null) {
+            statement.setNull(paramIdx, Types.VARCHAR);
         } else {
-        	statement.setNull(paramIdx, Types.VARCHAR);
+            statement.setString(paramIdx, value);
         }
     }
 
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, Timestamp value) throws SQLException {
-        if (null != value) {
-        	statement.setTimestamp(paramIdx, value);
+        if (value == null) {
+            statement.setNull(paramIdx, Types.TIMESTAMP);
         } else {
-        	statement.setNull(paramIdx, Types.TIMESTAMP);
+            statement.setTimestamp(paramIdx, value);
         }
     }
 
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, Time value) throws SQLException {
-        if (null != value) {
-        	statement.setTime(paramIdx, value);
+        if (value == null) {
+            statement.setNull(paramIdx, Types.TIME);
         } else {
-        	statement.setNull(paramIdx, Types.TIME);
+            statement.setTime(paramIdx, value);
         }
     }
 
 
     public void setParameter(PreparedStatement statement, int paramIdx, Boolean value) throws SQLException {
-        if (null != value)
-        	statement.setBoolean(paramIdx, value);
+        if (value == null)
+            statement.setNull(paramIdx, Types.BOOLEAN);
         else
-        	statement.setNull(paramIdx, Types.BOOLEAN);
+            statement.setBoolean(paramIdx, value);
     }
 
-
-    public void setParameter(PreparedStatement statement, int paramIdx, Date value) throws SQLException {
-        if (null != value) {
-            statement.setObject(paramIdx, value, Types.DATE);            
-        } else {
-        	statement.setNull(paramIdx, Types.DATE);
-        }
-    }
-    
-    public void setParameter(PreparedStatement statement, int paramIdx, java.sql.Date value) throws SQLException {
-    	if (null != value) {
-    	    statement.setDate(paramIdx, value);            
-        } else {
-        	statement.setNull(paramIdx, Types.DATE);
-        }
-    }
-    
     @Override
     public void setParameter(PreparedStatement statement, int paramIdx, UUID value) throws SQLException {
         statement.setObject(paramIdx, value);
@@ -173,10 +146,5 @@ public class PgQuirks implements Quirks{
     @Override
     public void closeStatement(Statement statement) throws SQLException {
         statement.close();
-    }
-
-    @Override
-    public SqlParameterParsingStrategy getSqlParameterParsingStrategy() {
-        return this.sqlParameterParsingStrategy;
     }
 }

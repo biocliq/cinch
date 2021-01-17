@@ -22,7 +22,5 @@ repositories {
 }
 
 dependencies {
-
 	implementation deps.org.sfm.jdbc
-	implementation deps.org.sql2o	
 }

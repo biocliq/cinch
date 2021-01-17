@@ -20,9 +20,8 @@ import java.util.Collection;
 
 import javax.sql.DataSource;
 
-import org.sql2o.quirks.Quirks;
-import org.sql2o.quirks.QuirksDetector;
-
+import com.zitlab.palmyra.cinch.quirks.Quirks;
+import com.zitlab.palmyra.cinch.quirks.QuirksDetector;
 import com.zitlab.palmyra.jdbc.util.DefaultJdbcUtils;
 import com.zitlab.palmyra.jdbc.util.JdbcUtils;
 

@@ -17,54 +17,35 @@ package com.zitlab.palmyra.cinch.converter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.Date;
 
-import com.zitlab.palmyra.util.DateTimeParser;
+public class SqlDateConverter implements Converter<Date>{
 
-public class DateConverter implements Converter<Date> {
-
-	private static final Converter<Date> instance = new DateConverter();
-
-	private DateConverter() {
-
+	private static final Converter<Date> instance = new SqlDateConverter();
+	
+	private SqlDateConverter() {
+		
 	}
-
+	
 	public static Converter<Date> instance() {
 		return instance;
 	}
-
+	
 	@Override
-	public Date read(ResultSet rs, int columnIndex) throws SQLException {
+	public Date read(ResultSet rs, int columnIndex) throws SQLException{
 		return rs.getDate(columnIndex);
 	}
 
 	@Override
-	public Date convert(Object value) {
-		if (null == value)
-			return null;
-
-		if (value instanceof Date) {
-			return (Date) value;
-		} else if (value instanceof Long)
-			return new Date((long) value);
-		else if (value instanceof java.sql.Date)
-			return new Time(((java.sql.Date) value).getTime());
-
-		String _value = value.toString().trim();
-		int length = _value.length();
-
-		if (length > 21) {
-			return DateTimeParser.parseDateTime(_value);
-		}else if (length > 12 & length < 15) {
-			try {
-				Long timestamp = Long.parseLong(_value);
-				return new Date(timestamp);
-			} catch (Throwable te) {
-
-			}
+	public Date convert(Object obj) {
+		if(obj instanceof Date) {
+			return (Date) obj;
+		} else if (obj instanceof java.util.Date) {
+			return new Date(((java.util.Date)obj).getTime());
 		}
-		throw new ConverterException(value.getClass() + ":" + value + " cannot be converted to Date");
+		else {
+			throw new ConverterException(obj.getClass() + " cannot be cast to Date");
+		}
 	}
 
 }

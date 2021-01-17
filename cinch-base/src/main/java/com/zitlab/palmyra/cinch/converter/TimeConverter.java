@@ -18,31 +18,54 @@ package com.zitlab.palmyra.cinch.converter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalTime;
 
-public class TimeConverter implements Converter<Time>{
+import com.zitlab.palmyra.util.DateTimeParser;
+
+public class TimeConverter implements Converter<Time> {
 
 	private static final Converter<Time> instance = new TimeConverter();
-	
+
 	private TimeConverter() {
-		
+
 	}
-	
+
 	public static Converter<Time> instance() {
 		return instance;
 	}
-	
+
 	@Override
-	public Time read(ResultSet rs, int columnIndex) throws SQLException{
+	public Time read(ResultSet rs, int columnIndex) throws SQLException {
 		return rs.getTime(columnIndex);
 	}
 
 	@Override
-	public Time convert(Object obj) {
-		if(obj instanceof Time) {
-			return (Time) obj;
-		}else {
-			throw new ConverterException(obj.getClass() + " cannot be cast to Time");
+	public Time convert(Object value) {
+		if (value instanceof Time) {
+			return (Time) value;
+		} else if (value instanceof Long) {
+			return new Time((Long) value);
+		} else if (value instanceof java.util.Date)
+			return new Time(((java.util.Date) value).getTime());
+
+		String _value = value.toString().trim();
+		int length = _value.length();
+
+		if (length == DateTimeParser.defaultTimeFormat.length()) {
+			return DateTimeParser.parseTime(_value);
+		} else if (length > 12 & length < 15) {
+			try {
+				Long timestamp = Long.parseLong(_value);
+				return new Time(timestamp);
+			} catch (Throwable te) {
+
+			}
+		} else if (length > 21) {
+			LocalTime localTime = LocalTime.from(DateTimeParser.getTemporalAccessorDateTime(_value));
+			return Time.valueOf(localTime);
 		}
+
+		throw new ConverterException(value.getClass() + " cannot be cast to Time");
 	}
 
 }

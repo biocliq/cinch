@@ -13,10 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.palmyra.cinch.dao.quirks.pgsql;
+package com.zitlab.palmyra.cinch.quirks.pgsql;
 
-import org.sql2o.quirks.Quirks;
-import org.sql2o.quirks.QuirksProvider;
+import com.zitlab.palmyra.cinch.quirks.Quirks;
+import com.zitlab.palmyra.cinch.quirks.QuirksProvider;
 
 public class PgQuirksProvider implements QuirksProvider{
 	@Override

@@ -17,6 +17,7 @@ package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
 import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.exception.CinchException;
 import com.zitlab.palmyra.cinch.exception.DDMException;
 import com.zitlab.palmyra.cinch.schema.Schema;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
@@ -87,7 +88,7 @@ public class AddlClauseHelper {
 				}else
 					sb.append(fragment);
 			} else
-				throw new DDMException("Table reference " + fragment.substring(0, index) + " not found");
+				throw new CinchException("Table reference " + fragment.substring(0, index) + " not found");
 		} else if (index < 0) {
 			Table table = query.getSubTable(fragment);
 			if(null != table)
@@ -95,7 +96,7 @@ public class AddlClauseHelper {
 			else
 				sb.append(fragment);
 		} else {
-			throw new DDMException("Table reference cannot be empty " + fragment);
+			throw new CinchException("Table reference cannot be empty " + fragment);
 		}
 
 	}

@@ -13,17 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.zitlab.palmyra.cinch.exception;
+package com.zitlab.palmyra.cinch.quirks.pgsql;
 
-public class CinchException extends RuntimeException {
-	
-	private static final long serialVersionUID = 1L;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-	public CinchException(String message) {
-		super(message);
-	}
-	
-	public CinchException(String message, Throwable e) {
-		super(message, e);
-	}
+import com.zitlab.palmyra.cinch.converter.Converter;
+import com.zitlab.palmyra.cinch.quirks.NoQuirks;
+
+@SuppressWarnings("rawtypes")
+public class PgQuirks extends NoQuirks{
+    protected final Map<Class,Converter>  converters;
+
+    public PgQuirks(Map<Class, Converter> converters) {    
+        this.converters = new HashMap<Class, Converter>(converters);
+    }
+
+    public PgQuirks() {
+        this(Collections.<Class,Converter>emptyMap());
+    }
 }

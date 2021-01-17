@@ -36,6 +36,7 @@ subprojects {
 	test {
 	    useTestNG {
 	        preserveOrder true
+	        useDefaultListeners = true
 	    }
 	}
 	

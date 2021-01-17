@@ -24,7 +24,8 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sql2o.Sql2oException;
+
+import com.zitlab.palmyra.cinch.exception.CinchException;
 
 public class DefaultJdbcUtils implements JdbcUtils {
 
@@ -44,7 +45,7 @@ public class DefaultJdbcUtils implements JdbcUtils {
 		try {
 			return ds.getConnection();
 		} catch (SQLException e) {
-			throw new Sql2oException("Error while getting database connection", e);
+			throw new CinchException("Error while getting database connection", e);
 		}
 	}
 

@@ -24,7 +24,7 @@ public class TupleFilter extends SelectCriteria {
 
 	private Expression expression;
 
-	public void addCriteria(String column, String condition) {
+	public void addCriteria(String column, Object condition) {
 		Tuple criteria = getCriteria();
 		if (null != criteria) {
 			criteria.setAttribute(column, condition);

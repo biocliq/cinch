@@ -37,6 +37,9 @@ public class IntConverter implements Converter<Integer>{
 
 	@Override
 	public Integer convert(Object obj) {
+		if(null == obj) 
+			return null;
+				
 		if(obj instanceof Integer) {
 			return (Integer) obj;
 		}else {

@@ -16,8 +16,6 @@
 
 package com.zitlab.palmyra.cinch.dao.query;
 
-import static org.sql2o.converters.Convert.throwIfNull;
-
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,15 +28,17 @@ import java.util.List;
 
 import org.simpleflatmapper.jdbc.JdbcMapper;
 import org.simpleflatmapper.util.CheckedConsumer;
-import org.sql2o.Sql2oException;
-import org.sql2o.converters.Converter;
-import org.sql2o.converters.ConverterException;
-import org.sql2o.quirks.Quirks;
 
+import com.zitlab.palmyra.cinch.converter.Converter;
+import com.zitlab.palmyra.cinch.converter.ConverterException;
 import com.zitlab.palmyra.cinch.dao.rshandler.ListHandler;
 import com.zitlab.palmyra.cinch.dao.rshandler.ResultSetHandler;
 import com.zitlab.palmyra.cinch.dao.rshandler.RowCallbackHandler;
+import com.zitlab.palmyra.cinch.exception.CinchException;
+import com.zitlab.palmyra.cinch.quirks.Quirks;
 import com.zitlab.palmyra.jdbc.util.JdbcUtils;
+
+import static com.zitlab.palmyra.cinch.converter.Convert.throwIfNull;
 
 public class Query {
 	private QueryFactory factory;
@@ -149,7 +149,7 @@ public class Query {
 			JdbcMapper<T> mapper = MapperFactory.getMapper(returnType);
 			return mapper.forEach(rs, new ListHandler<T>()).list();
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -169,7 +169,7 @@ public class Query {
 			JdbcMapper<T> mapper = MapperFactory.getMapper(type);
 			return mapper.forEach(rs, new ListHandler<T>()).list();
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -188,7 +188,7 @@ public class Query {
 			JdbcMapper<T> mapper = MapperFactory.getMapper(clazz);
 			mapper.forEach(rs, handler);			
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {			
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -208,7 +208,7 @@ public class Query {
 			while(rs.next())
 				handler.processRow(rs);
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -230,7 +230,7 @@ public class Query {
 				list.add(handler.processRow(rs));			
 			return list;
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -250,7 +250,7 @@ public class Query {
 			JdbcMapper<T> mapper = MapperFactory.getMapper(returnType);
 			mapper.forEach(rs, consumer);
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeAndFetch, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeAndFetch, " + ex.getMessage(), ex);
 		} finally {
 			params.clear();
 			jdbcUtils.closeResultSet(rs);
@@ -289,14 +289,14 @@ public class Query {
 					Converter<V> converter = throwIfNull(returnType, quirks.converterOf(returnType));
 					return converter.convert(key);
 				} catch (ConverterException e) {
-					throw new Sql2oException(
+					throw new CinchException(
 							"Exception occurred while converting value from database to type " + returnType.toString(),
 							e);
 				}
 			} else
 				return null;
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in insert, " + ex.getMessage(), ex);
+			throw new CinchException("Error in insert, " + ex.getMessage(), ex);
 		} finally {
 			jdbcUtils.closeStatement(statement);
 			factory.releaseConnection(con);
@@ -315,7 +315,7 @@ public class Query {
 			statement = prepareStatement(con);
 			return statement.executeUpdate();
 		} catch (SQLException ex) {
-			throw new Sql2oException("Error in executeUpdate, " + ex.getMessage(), ex);
+			throw new CinchException("Error in executeUpdate, " + ex.getMessage(), ex);
 		} finally {
 			jdbcUtils.closeStatement(statement);
 			factory.releaseConnection(con);
@@ -337,7 +337,7 @@ public class Query {
 			}
 
 		} catch (SQLException e) {
-			throw new Sql2oException("Database error occurred while running executeScalar: " + e.getMessage(), e);
+			throw new CinchException("Database error occurred while running executeScalar: " + e.getMessage(), e);
 		} finally {
 			jdbcUtils.closeStatement(statement);
 			factory.releaseConnection(con);
@@ -356,7 +356,7 @@ public class Query {
 			converter = throwIfNull(returnType, getQuirks().converterOf(returnType));
 			return executeScalar(converter);
 		} catch (ConverterException e) {
-			throw new Sql2oException("Error occured while converting value from database to type " + returnType, e);
+			throw new CinchException("Error occured while converting value from database to type " + returnType, e);
 		}
 	}
 
@@ -364,7 +364,7 @@ public class Query {
 		try {
 			return converter.convert(executeScalar());
 		} catch (ConverterException e) {
-			throw new Sql2oException("Error occured while converting value from database", e);
+			throw new CinchException("Error occured while converting value from database", e);
 		}
 	}
 
@@ -376,7 +376,7 @@ public class Query {
 		} else if (0 == list.size()) {
 			return null;
 		}
-		throw new Sql2oException("More than one record found");
+		throw new CinchException("More than one record found");
 	}
 	
 	public <T> T executeAndFetchUnique(ResultSetHandler<T> returnType) {
@@ -387,7 +387,7 @@ public class Query {
 		} else if (0 == list.size()) {
 			return null;
 		}
-		throw new Sql2oException("More than one record found");
+		throw new CinchException("More than one record found");
 	}
 
 	public <T> T executeAndFetchUnique(Type type) {
@@ -398,6 +398,6 @@ public class Query {
 		} else if (0 == list.size()) {
 			return null;
 		}
-		throw new Sql2oException("More than one record found");
+		throw new CinchException("More than one record found");
 	}
 }

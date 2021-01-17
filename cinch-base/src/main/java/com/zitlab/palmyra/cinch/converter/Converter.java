@@ -25,6 +25,10 @@ public interface Converter<T> {
 
 	public T convert(Object obj);
 
+    public default Object toDatabaseParam(T val) {
+    	return val;
+    }
+	
 	public static Converter<?> getConverter(int dataType) {
 		switch (dataType) {
 		case Types.CHAR:
