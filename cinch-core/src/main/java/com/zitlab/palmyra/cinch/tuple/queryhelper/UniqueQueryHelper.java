@@ -27,7 +27,7 @@ import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.cinch.dbmeta.UniqueKey;
 import com.zitlab.palmyra.cinch.pojo.Tuple;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
@@ -47,7 +47,7 @@ class UniqueQueryHelper extends AppendColumnHelper {
 		this.helper = helper;
 	}
 
-	public QueryParams getSelectQueryByUQKey(Tuple item, TupleFilter filter, Dialect dialect) {
+	public QueryParams getSelectQueryByUQKey(Tuple item, QueryFilter filter, Dialect dialect) {
 
 		TupleType tupleType = item.getTupleType();
 		ArrayList<Object> valueList = new ArrayList<Object>();

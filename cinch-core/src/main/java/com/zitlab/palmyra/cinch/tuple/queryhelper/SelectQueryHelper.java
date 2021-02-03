@@ -16,11 +16,12 @@
 package com.zitlab.palmyra.cinch.tuple.queryhelper;
 
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.cinch.pojo.Tuple;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
 import com.zitlab.palmyra.cinch.schema.Schema;
 import com.zitlab.palmyra.cinch.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
+import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.CustomCondition;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
@@ -40,7 +41,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 		return configFactory.getConfig().getDialect();
 	}
 
-	public QueryParams getSelectQueryById(TupleType type, Object id, TupleFilter filter) {
+	public QueryParams getSelectQueryById(TupleType type, Object id, QueryFilter filter) {
 		PrimaryKeyHelper helper = new PrimaryKeyHelper(type);
 	//	String tableName = type.getTable();
 		String reference = type.getName();
@@ -61,7 +62,6 @@ public class SelectQueryHelper extends AppendColumnHelper {
 			query.addCondition(new CustomCondition(type.getCriteria()));
 		}
 		appendColumnsToSelect(query, type, rootTable, filter);
-
 		helper.addPrimaryKeyValues(id, query, list, rootTable);
 
 		String queryString = query.getQuery();
@@ -73,22 +73,22 @@ public class SelectQueryHelper extends AppendColumnHelper {
 		return params;
 	}
 
-	public QueryParams getSearchQuery(TupleType tupleType, TupleFilter filter) {
+	public QueryParams getSearchQuery(TupleType tupleType, QueryFilter filter) {
 
-		Tuple item = filter.getCriteria();
+		ComboCondition conditions = filter.getConditions();
 		DataList valueList = new DataList();
-
+		Tuple item=filter.getCriteria();
 		String tableName = tupleType.getTable();
 		String reference = tupleType.getName();
 		Table rootTable = new Table(tupleType.getSchema(),tableName, reference);
 		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, getDialect());
-
-		addQueryCriteria(tupleType.getName(), item, tupleType, query, rootTable, valueList);
+		
+		//valueList.addAll(filter.getDataList());
+		addQueryCriteria(tupleType.getName(), conditions, tupleType, query, rootTable, valueList);
 		setAddlFilters(query, filter);
 		appendColumnsToSelect(query, tupleType, rootTable, filter);
-
 		addOrderClause(filter, tupleType, query);
-
+		
 		String criteria = filter.getAddlCriteria();
 		if (null != criteria)
 			query.addCondition(CriteriaHelper.getCondition(criteria, query, tupleType));
@@ -107,8 +107,9 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 		return params;
 	}
+	
 
-	public void setAddlFilters(SelectQuery<Table> query, TupleFilter filter) {
+	public void setAddlFilters(SelectQuery<Table> query, QueryFilter filter) {
 		if (null == filter)
 			return;
 		String _join = filter.getAddlJoin();
@@ -119,7 +120,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 		}
 	}
 
-	public QueryParams getSelectQueryByUQKey(Tuple item, TupleFilter filter) {
+	public QueryParams getSelectQueryByUQKey(Tuple item, QueryFilter filter) {
 		UniqueQueryHelper queryHelper = new UniqueQueryHelper(this);
 		return queryHelper.getSelectQueryByUQKey(item, filter, getDialect());
 	}

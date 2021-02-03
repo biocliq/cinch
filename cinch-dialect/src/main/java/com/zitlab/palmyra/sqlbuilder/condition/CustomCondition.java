@@ -15,6 +15,11 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
+import com.zitlab.palmyra.sqlbuilder.query.Column;
+import com.zitlab.palmyra.sqlbuilder.query.Table;
+
 public class CustomCondition extends Condition{
 	private String condition;
 	
@@ -38,5 +43,17 @@ public class CustomCondition extends Condition{
 		sb.append(condition);
 		if (parenthesis)
 			sb.append(")");
+	}
+
+	@Override
+	public void appendValue(List<Object> valueList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setColumn(Table<? extends Column> table, String column) {
+		// TODO Auto-generated method stub
+		
 	}
 }

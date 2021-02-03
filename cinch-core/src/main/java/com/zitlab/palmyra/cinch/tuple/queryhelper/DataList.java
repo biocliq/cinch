@@ -24,7 +24,9 @@ import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 
 public class DataList extends ArrayList<Object> {
 	private static final long serialVersionUID = 1L;
-
+	public boolean addAll(ArrayList<String> valueList) {
+		return super.addAll(valueList);
+	}
 	public boolean add(Object value) {
 		throw new UnsupportedOperationException("This method should not be used");
 	}

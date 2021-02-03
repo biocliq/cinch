@@ -89,9 +89,11 @@ public class PrimaryKeyHelper {
 
 		if (1 == keys.size()) {
 			TupleAttribute attrib = keys.get(0);
+			
 			query.addCondition(new BinaryCondition(Operator.EQUAL_TO, table, attrib.getColumnName()));
 			queryParams.add(id, attrib);
 		} else {
+			
 			if (id instanceof Map) {
 				Map attribs = (Map) id;
 				for (TupleAttribute attrib : keys) {

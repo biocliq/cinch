@@ -23,7 +23,7 @@ import com.zitlab.palmyra.cinch.exception.DataValidationException;
 import com.zitlab.palmyra.cinch.exception.FieldValidationException;
 import com.zitlab.palmyra.cinch.exception.Validation;
 import com.zitlab.palmyra.cinch.pojo.FieldList;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.sqlbuilder.query.Query;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
 import com.zitlab.palmyra.util.TextUtil;
@@ -86,7 +86,7 @@ public class ClauseHelper{
 
 	}
 
-	public void addOrderClause(TupleFilter filter, TupleType tupleType, SelectQuery<Table> query) {
+	public void addOrderClause(QueryFilter filter, TupleType tupleType, SelectQuery<Table> query) {
 		FieldList orderMap = filter.getOrderBy();
 		if (null != orderMap) {
 			for (String orderClause : orderMap.getAttributes()) {

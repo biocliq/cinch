@@ -15,53 +15,41 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.query.Column;
 import com.zitlab.palmyra.sqlbuilder.query.Table;
 
-public class BinaryCondition extends Condition {
-	private Operator operator;
-	private Object left;
-	private Object right;
+public class BinaryCondition extends ColumnCondition {
+	private Operator operator;	
+	private Object value = "?";
 
-	public BinaryCondition(Operator operator, String left) {
-		this.operator = operator;
-		this.left = left;
-		this.right = "?";
-	}
 	
-	public BinaryCondition(Operator operator, Table<? extends Column> table, String left) {
+	public BinaryCondition(Operator operator, Table<? extends Column> table, String left, Object value) {
+		super(null, table, left);
 		this.operator= operator;
-		this.left = getColumnAlias(table, left);
-		this.right = "?";
+		this.value = value;
 	}
 
-	public BinaryCondition(Operator operator, String left, Object right) {
+	public BinaryCondition(Operator operator, String attribute, Object value) {
+		super(attribute);
 		this.operator = operator;
-		this.left = left;
-		this.right = right;
+		this.value = value;
 	}
 
 	public Operator getOperator() {
 		return operator;
 	}
 
-	public Object getLeft() {
-		return left;
-	}
-
-	public Object getRight() {
-		return right;
-	}
-
 	public String toString() {
-		return left + operator.toString() + right;
+		return getColumn() + operator.toString() + value;
 	}
 
 	@Override
 	public void append(StringBuilder sb) {
 		if (parenthesis)
 			sb.append("(");
-		sb.append(left).append(operator).append(right);
+		sb.append(getColumn()).append(operator).append("?");
 		if (parenthesis)
 			sb.append(")");
 	}
@@ -98,78 +86,12 @@ public class BinaryCondition extends Condition {
 		return new BinaryCondition(Operator.NOT_LIKE, column, value);
 	}
 	
-	
-	public static BinaryCondition lessThan(String column) {
-		return new BinaryCondition(Operator.LESS_THAN, column);
-	}
-
-	public static BinaryCondition lessThanOrEq(String column) {
-		return new BinaryCondition(Operator.LESS_THAN_OR_EQUAL_TO, column);
-	}
-
-	public static BinaryCondition greaterThan(String column) {
-		return new BinaryCondition(Operator.GREATER_THAN, column);
-	}
-
-	public static BinaryCondition greaterThanOrEq(String column) {
-		return new BinaryCondition(Operator.GREATER_THAN_OR_EQUAL_TO, column);
-	}
-
-	public static BinaryCondition equals(String column) {
-		return new BinaryCondition(Operator.EQUAL_TO, column);
-	}
-
-	public static BinaryCondition notEquals(String column) {
-		return new BinaryCondition(Operator.NOT_EQUAL_TO, column);
-	}
-
-	public static BinaryCondition like(String column) {
-		return new BinaryCondition(Operator.LIKE, column);
-	}
-
-	public static BinaryCondition notLike(String column) {
-		return new BinaryCondition(Operator.NOT_LIKE, column);
-	}
-
 	public static NullCondition isNull(String column) {
 		return new NullCondition(column);
 	}
 
 	public static NotNullCondition isNotNull( String column) {
 		return new NotNullCondition(column);
-	}
-
-	
-	public static BinaryCondition lessThan(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.LESS_THAN, table, column);
-	}
-
-	public static BinaryCondition lessThanOrEq(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.LESS_THAN_OR_EQUAL_TO, table, column);
-	}
-
-	public static BinaryCondition greaterThan(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.GREATER_THAN, table, column);
-	}
-
-	public static BinaryCondition greaterThanOrEq(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.GREATER_THAN_OR_EQUAL_TO, table, column);
-	}
-
-	public static BinaryCondition equals(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.EQUAL_TO, table, column);
-	}
-
-	public static BinaryCondition notEquals(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.NOT_EQUAL_TO, table, column);
-	}
-
-	public static BinaryCondition like(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.LIKE, table, column);
-	}
-
-	public static BinaryCondition notLike(Table<? extends Column> table, String column) {
-		return new BinaryCondition(Operator.NOT_LIKE, table, column);
 	}
 	
 	public static NullCondition isNull(Table<? extends Column> table, String column) {
@@ -179,4 +101,10 @@ public class BinaryCondition extends Condition {
 	public static NotNullCondition isNotNull(Table<? extends Column> table, String column) {
 		return new NotNullCondition(table, column);
 	}
+
+	@Override
+	public void appendValue(List<Object> valueList) {
+		valueList.add(value);		
+	}
+
 }

@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.pojo;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -93,7 +94,15 @@ public abstract class SelectCriteria {
 	public void setFields(FieldList fields) {
 		this.fields = fields;
 	}
-
+	public void setFields(String ...fields ) {
+		if(null == this.fields) 
+			this.fields=new FieldList();
+		if(null != fields)
+		{
+			List<String> attributes= Arrays.asList(fields);
+			this.fields.setAttributes(attributes);
+		}
+	}
 	public void setFieldsAsString(List<String> fieldList) {
 		if (null == this.fields)
 			this.fields = new FieldList();
@@ -113,7 +122,7 @@ public abstract class SelectCriteria {
 
 	public abstract void setCriteria(String addlCriteria);
 	
-	public abstract void addCriteria(String addlCriteria);
+	public abstract void addCondition(String addlCriteria);
 
 	public String getAddlJoin() {
 		return addlJoin;

@@ -27,9 +27,11 @@ import com.zitlab.palmyra.cinch.exception.FieldValidationException;
 import com.zitlab.palmyra.cinch.exception.Validation;
 import com.zitlab.palmyra.cinch.pojo.FieldList;
 import com.zitlab.palmyra.cinch.pojo.Tuple;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.sqlbuilder.condition.BinaryCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.ColumnCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.condition.NullCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.Operator;
 import com.zitlab.palmyra.sqlbuilder.query.SelectQuery;
@@ -38,34 +40,55 @@ import com.zitlab.palmyra.util.TextUtil;
 public class AppendColumnHelper extends QueryHelper {
 //	private static final Logger logger = LoggerFactory.getLogger(AppendColumnHelper.class);
 
-	protected void addQueryCriteria(String ref, Tuple criteria, TupleType tupleType, SelectQuery<Table> query,
+	protected void addQueryCriteria(String ref, ComboCondition condition, TupleType tupleType, SelectQuery<Table> query,
 			Table table, DataList valueList) {
-		if (null == criteria)
+		if (null == condition)
 			return;
-		addQueryCriteriaByField(criteria, tupleType, query, table, valueList);
-		TupleType refType = null;
-		// Add Query element from the reference CI
-		Map<String, Tuple> refCis = criteria.getParent();
-		for (Entry<String, Tuple> entry : refCis.entrySet()) {
-			Tuple refItem = entry.getValue();
-			if (null != refItem) {
-				String relatedCi = entry.getKey();
-				String ctRef = TextUtil.appendAll(ref, ".", relatedCi);
-				ForeignKey fKey = tupleType.getForeignKey(relatedCi);
-				if (null != fKey) {
-					refType = fKey.getTargetType();
-					// refItem.setTupleType(refType);
-					Table subTable = getSubTable(query, refType, ctRef);
-//							query.getSubTable(refType.getSchema(), refType.getTable(), ctRef,refType.getName());
-					addInnerJoin(query, table, tupleType, subTable, refType, fKey);
-					addQueryCriteria(ctRef, refItem, refType, query, subTable, valueList);
-				} else {
-					throw new FieldValidationException(relatedCi, tupleType.getName(),
-							"Parent reference " + relatedCi + " is not found for ci type " + tupleType.getName(),
-							Validation.MISSING_REFERENCE);
+		
+		Map<String, TupleAttribute> atts = tupleType.getAllFields();
+		
+		for(Condition cond: condition.getConditions()) {
+			if(cond instanceof ColumnCondition) {
+				ColumnCondition ccond = (ColumnCondition) cond;
+				String attribute = ccond.getAttribute();
+				TupleAttribute attrib = atts.get(attribute);
+				if(null != attrib) {
+					ccond.setColumn(table, attrib.getColumnName());
+				}else {
+					//Throw an exception;
 				}
 			}
+			
 		}
+		
+		
+//		addQueryCriteriaByField(criteria,tupleType, query, table, valueList);
+//		if(null == criteria)
+//			return;
+//		TupleType refType = null;
+//		// Add Query element from the reference CI
+//		Map<String, Tuple> refCis = criteria.getParent();
+//		for (Entry<String, Tuple> entry : refCis.entrySet()) {
+//			Tuple refItem = entry.getValue();
+//			if (null != refItem) {
+//				String relatedCi = entry.getKey();
+//				String ctRef = TextUtil.appendAll(ref, ".", relatedCi);
+//				ForeignKey fKey = tupleType.getForeignKey(relatedCi);
+//				if (null != fKey) {
+//					refType = fKey.getTargetType();
+//					// refItem.setTupleType(refType);
+//					Table subTable = getSubTable(query, refType, ctRef);
+////							query.getSubTable(refType.getSchema(), refType.getTable(), ctRef,refType.getName());
+//					addInnerJoin(query, table, tupleType, subTable, refType, fKey);
+//				//check
+//					addQueryCriteria(ctRef, refItem, condition,refType, query, subTable, valueList);
+//				} else {
+//					throw new FieldValidationException(relatedCi, tupleType.getName(),
+//							"Parent reference " + relatedCi + " is not found for ci type " + tupleType.getName(),
+//							Validation.MISSING_REFERENCE);
+//				}
+//			}
+//		}
 	}
 
 	protected void addQueryCriteriaByField(Tuple criteria, TupleType tupleType, SelectQuery<Table> query, Table table,
@@ -79,7 +102,7 @@ public class AppendColumnHelper extends QueryHelper {
 
 			if (null != field) {
 				if (!field.isFormula())
-					addCriteria(query, valueList, table, field, value);
+					addCriteria(query, conditions,valueList, table, field, value);
 
 				else
 					// TODO this should be handled after constructing the actual query
@@ -98,8 +121,8 @@ public class AppendColumnHelper extends QueryHelper {
 		if (null == value) {
 			query.addCondition(new NullCondition(table, attribute.getColumnName()));
 		} else {
-			query.addCondition(new BinaryCondition(operator, table, attribute.getColumnName()));
-			valueList.add(value, attribute);
+			query.addCondition(new BinaryCondition(operator, table, attribute.getColumnName(), value));
+			//valueList.add(value, attribute);
 		}
 	}
 
@@ -111,8 +134,8 @@ public class AppendColumnHelper extends QueryHelper {
 			if (null == value) {
 				cond.addCondition(new NullCondition(table, attribute.getColumnName()));
 			} else {
-				cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName()));
-				valueList.add(value, attribute);
+				cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName(), value));
+				//valueList.add(value, attribute);
 			}
 		} else {
 			Map<String, Object> valueMap = (Map<String, Object>) value;
@@ -126,8 +149,8 @@ public class AppendColumnHelper extends QueryHelper {
 				if (null == _val) {
 					cond.addCondition(new NullCondition(table, attribute.getColumnName()));
 				} else {
-					cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName()));
-					valueList.add(_val, attribute);
+					cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName(), value));
+					//valueList.add(_val, attribute);
 				}
 			}
 		}
@@ -139,19 +162,19 @@ public class AppendColumnHelper extends QueryHelper {
 		if (null == value) {
 			cond.addCondition(new NullCondition(table, attribute.getColumnName()));
 		} else {
-			cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName()));
-			valueList.add(value, attribute);
+			cond.addCondition(new BinaryCondition(operator, table, attribute.getColumnName(), value));
+			//valueList.add(value, attribute);
 		}
 	}
 
 	protected final void addCriteria(SelectQuery<Table> query, DataList valueList, Table table,
 			TupleAttribute attribute, Object value) {
-
 		query.addCondition(getCondition(table, attribute, value, valueList));
+		
 	}
 
 	protected void appendColumnsToSelect(SelectQuery<Table> query, TupleType tupleType, Table rootTable,
-			TupleFilter filter) {
+			QueryFilter filter) {
 		List<String> fields = null;
 		FieldList fieldList = null;
 		HashMap<String, FieldList> referenceMap = null;

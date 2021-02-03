@@ -8,7 +8,7 @@ import com.zitlab.palmyra.cinch.dao.query.QueryFactory;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.cinch.pojo.FieldList;
 import com.zitlab.palmyra.cinch.pojo.Tuple;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.cinch.schema.DefaultSchemaFactory;
 import com.zitlab.palmyra.cinch.schema.Schema;
 import com.zitlab.palmyra.cinch.schema.SchemaFactory;
@@ -35,7 +35,7 @@ public class SelectQueryCreationBenchmark {
 		tuple.set("districtcode", "02");
 	
 		tuple.setTupleType(tupleType);
-		TupleFilter filter = new TupleFilter();
+		QueryFilter filter = new QueryFilter();
 		filter.setCriteria(tuple);
 		
 		for (int i = 0; i < 100000; i++) {
@@ -47,7 +47,7 @@ public class SelectQueryCreationBenchmark {
 		long time = System.nanoTime();
 		for (int i = 0; i < count; i++) {
 			SelectQueryHelper helper = new SelectQueryHelper(factory);
-//			helper.getSearchQuery(tupleType, new TupleFilter());
+//			helper.getSearchQuery(tupleType, new QueryFilter());
 			helper.getSelectQueryByUQKey(tuple, filter);
 		}
 		
@@ -65,7 +65,7 @@ public class SelectQueryCreationBenchmark {
 		factory.load("default", ds, "palmyra", "cmt_lookup", "app_common", "npr_2021");
 		List<Tuple> tuples = null;
 		Schema config = factory.getConfig();
-		TupleFilter filter = new TupleFilter();
+		QueryFilter filter = new QueryFilter();
 		filter.setLimit(-1);
 		FieldList fl = new FieldList();
 		fl.addField("grn");

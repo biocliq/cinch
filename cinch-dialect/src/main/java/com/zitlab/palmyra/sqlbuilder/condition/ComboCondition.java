@@ -18,15 +18,36 @@ package com.zitlab.palmyra.sqlbuilder.condition;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
+import com.zitlab.palmyra.sqlbuilder.query.Column;
+import com.zitlab.palmyra.sqlbuilder.query.Table;
 
 public class ComboCondition extends Condition {
 	private ArrayList<Condition> conditions = new ArrayList<Condition>();
-	private Op operator = Op.AND;
+	private Op operator;
 
 	public ComboCondition(Op operator) {
 		this.operator = operator;
 	}
+
+	public ArrayList<Condition> getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(ArrayList<Condition> conditions) {
+		this.conditions = conditions;
+	}
+
+	public Op getOperator() {
+		return operator;
+	}
+
+	public void setOperator(Op operator) {
+		this.operator = operator;
+	}
+
+	
 
 	public int count() {
 		return conditions.size();
@@ -59,6 +80,7 @@ public class ComboCondition extends Condition {
 
 	@Override
 	public void append(StringBuilder sb, Dialect dialect) {
+		
 		List<Condition> conds = conditions;		
 		int len = conds.size();
 		boolean isParenthesis = len != 1;
@@ -82,4 +104,24 @@ public class ComboCondition extends Condition {
 		}
 	}
 
-}
+	@Override
+	public void appendValue(List<Object> valueList) {
+		List<Condition> conds = conditions;	
+		int len=conds.size();
+		Condition condition;	
+		if(len>0) {
+			for (int index = 0; index < len; index++) {
+				condition = conds.get(index);
+				condition.appendValue(valueList);
+			}
+		}
+		
+	}
+
+	@Override
+	public void setColumn(Table<? extends Column> table, String column) {
+		// TODO Auto-generated method stub
+		
+	}
+
+} 

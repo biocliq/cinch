@@ -15,17 +15,29 @@
  ******************************************************************************/
 package com.zitlab.palmyra.cinch.pojo;
 
+import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.Condition;
+import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
+
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 
-public class TupleFilter extends SelectCriteria {
+public class QueryFilter extends SelectCriteria {
 
 	private Expression expression;
-
-	public void addCriteria(String column, Object condition) {
+	public static final QueryFilter NO_FILTER = new QueryFilter();
+	private ComboCondition conditions=new ComboCondition(Op.AND);
+	
+	//change to condition
+	public void addCondition(Condition condition) {
+		this.conditions.addCondition(condition);
+				
+	}
+	public void addCriteria(String column, String condition) {
 		Tuple criteria = getCriteria();
+
 		if (null != criteria) {
 			criteria.setAttribute(column, condition);
 		} else {
@@ -52,8 +64,7 @@ public class TupleFilter extends SelectCriteria {
 		}
 	}
 
-	@Override
-	public void addCriteria(String addlCriteria) {
+	public void sqlExpression(String addlCriteria) {
 		try {
 			Expression expr = CCJSqlParserUtil.parseCondExpression(addlCriteria);
 			if (null == expression) {
@@ -63,6 +74,12 @@ public class TupleFilter extends SelectCriteria {
 		} catch (JSQLParserException e) {
 			throw new RuntimeException("Invalid criteria " + addlCriteria, e);
 		}
+
+	}
+
+	@Override
+	public void addCondition(String addlCriteria) {
+		// TODO Auto-generated method stub
 
 	}
 

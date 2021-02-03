@@ -24,7 +24,7 @@ import com.zitlab.palmyra.cinch.dao.annotations.Extractor;
 import com.zitlab.palmyra.cinch.dao.query.QueryFactory;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.cinch.orm.dao.CinchDao;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.cinch.schema.SchemaFactory;
 import com.zitlab.palmyra.cinch.tuple.dao.QueryParams;
 import com.zitlab.palmyra.cinch.tuple.queryhelper.SelectQueryHelper;
@@ -33,7 +33,7 @@ public class QueryBuilder {
 	private Class<?> clazz;
 	private SchemaFactory configFactory;
 	private DataSource ds;
-	private TupleFilter filter = new TupleFilter();
+	private QueryFilter filter = new QueryFilter();
 	
 	public <T> QueryBuilder(Class<T> clazz, SchemaFactory config, DataSource ds) {
 		this.clazz = clazz;
@@ -49,7 +49,7 @@ public class QueryBuilder {
 	
 	
 	public QueryBuilder addCriteria(String condition){
-		filter.addCriteria(condition);
+		filter.addCondition(condition);
 		return this;
 	}
 	

@@ -15,22 +15,40 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.query.Column;
 import com.zitlab.palmyra.sqlbuilder.query.Table;
 
-public class NullCondition extends Condition{
+public class NullCondition extends ColumnCondition{
 	private String field;
 
+	public NullCondition(String attribute,String field) {
+		super(attribute);
+		this.field = field;
+	}
 	public NullCondition(String field) {
+		super(null);
 		this.field = field;
 	}
 	
+	public NullCondition(String attribute,Table<? extends Column> table, String field) {
+		super(attribute,table,field);
+		this.field = getColumnAlias(table, field);
+	}
 	public NullCondition(Table<? extends Column> table, String field) {
+		super(null,table,field);
 		this.field = getColumnAlias(table, field);
 	}
 	
 	@Override
 	public void append(StringBuilder sb) {
 		sb.append(" ").append(field).append(" IS NULL");
+	}
+
+	@Override
+	public void appendValue(List<Object> valueList) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

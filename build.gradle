@@ -57,7 +57,11 @@ subprojects {
 	}
 }
 
-project(":cinch-base"){    
+project(":cinch-base"){ 
+	dependencies {
+		
+		implementation project(":cinch-dialect")
+		}
 }
 
 project(":cinch-dao"){
@@ -76,7 +80,7 @@ project(":cinch-schema"){
 }
 
 project(":cinch-dialect"){
-    
+
 }
 
 project ("cinch-examples"){

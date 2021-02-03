@@ -15,13 +15,21 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.query.Column;
 import com.zitlab.palmyra.sqlbuilder.query.Table;
 
-public abstract class Condition extends NestableObject{
-
+public abstract class Condition extends NestableObject{	
+	
+	public abstract void appendValue(List<Object> valueList);
+	
 	protected final String getColumnAlias(Table<? extends Column> table, String column) {
 		StringBuilder sb = new StringBuilder(32);
 		return sb.append(table.getQueryAlias()).append('.').append(column).toString();
 	}
+	
+	public abstract void setColumn(Table<? extends Column> table, String column); 
+	
+	
 }

@@ -112,7 +112,7 @@ public abstract class QueryHelper extends JoinHelper {
 		String end = sVal.substring(idx + 3, sVal.length());
 		valueList.add(start, attribute);
 		valueList.add(end, attribute);
-		return new BetweenCondition(table, attribute.getColumnName());
+		return new BetweenCondition(table, attribute.getColumnName(),start,end);
 	}
 
 	private static Condition getLikeCondition(Table table, TupleAttribute attribute, String sVal, DataList valueList) {

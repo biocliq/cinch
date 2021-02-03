@@ -9,7 +9,7 @@ import com.zitlab.palmyra.cinch.dao.query.QueryFactory;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;
 import com.zitlab.palmyra.cinch.pojo.FieldList;
 import com.zitlab.palmyra.cinch.pojo.Tuple;
-import com.zitlab.palmyra.cinch.pojo.TupleFilter;
+import com.zitlab.palmyra.cinch.pojo.QueryFilter;
 import com.zitlab.palmyra.cinch.schema.DefaultSchemaFactory;
 import com.zitlab.palmyra.cinch.schema.Schema;
 import com.zitlab.palmyra.cinch.schema.SchemaFactory;
@@ -19,7 +19,7 @@ import com.zitlab.palmyra.util.QueryTimer;
 
 
 public class TestConfigProvider {
-	public static void main(String args[]) {
+	public static void f(String args[]) {
 		DataSource ds = DsProvider.getDataSource();
 		
 		QueryFactory zql2o = new QueryFactory(ds);
@@ -35,7 +35,7 @@ public class TestConfigProvider {
 		factory.load("default", ds, "pharma");
 		List<Tuple> tuples = null;
 		Schema config = factory.getConfig();
-		TupleFilter filter = new TupleFilter();
+		QueryFilter filter = new QueryFilter();
 		filter.setLimit(-1);
 		FieldList fl = new FieldList();
 		fl.addField("grn");

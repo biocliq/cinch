@@ -15,25 +15,52 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.query.Column;
 import com.zitlab.palmyra.sqlbuilder.query.Table;
 
-public class BetweenCondition extends Condition{
-	private String field;
+public class BetweenCondition extends ColumnCondition{
+	
+	private Object start;
+	private Object end; 
 	private boolean _negate = false;
 
-	public BetweenCondition(String field) {
-		this.field = field;
+	public BetweenCondition(String attribute, Object start, Object end) {
+		super(attribute);
+		this.start = start;
+		this.end = end;
 	}
 	
-	public BetweenCondition(Table<? extends Column> table, String field) {
-		this.field = getColumnAlias(table, field);
+	public BetweenCondition(String attribute, boolean negate, Object start, Object end) {
+		super(attribute);
+		this._negate = negate;
+		this.start = start;
+		this.end = end;
+	}
+		
+	public BetweenCondition(Table<? extends Column> table, String column, Object start, Object end) {
+		super(null, table, column);
+		this.start = start;
+		this.end = end;
+	}
+	
+	public BetweenCondition(Table<? extends Column> table, String column, boolean negate, Object start, Object end) {
+		super(null, table, column);
+		this.start = start;
+		this.end = end;
 	}
 	
 	@Override
 	public void append(StringBuilder sb) {
-		 sb.append(field)
+		 sb.append(getColumn())
 	      .append(_negate ? " NOT BETWEEN " : " BETWEEN ")
 	      .append("? AND ?");
+	}
+
+	@Override
+	public void appendValue(List<Object> valueList) {
+		valueList.add(start);
+		valueList.add(end);
 	}	
 }

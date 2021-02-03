@@ -62,6 +62,7 @@ public class Table<T extends Column> {
 				sb.append(queryAlias).append('.');
 			}
 			sb.append(col.name).append(' ');
+			sb.append(queryAlias).append('_');
 			sb.append(col.alias);
 			sb.append(',');
 		});
@@ -80,7 +81,7 @@ public class Table<T extends Column> {
 				sb.append(queryAlias).append('.');
 			}
 			sb.append(col.name).append(' ');
-//			sb.append(queryAlias).append('_');
+			sb.append(queryAlias).append('_');
 			sb.append(col.alias);
 			sb.append(',');
 		}

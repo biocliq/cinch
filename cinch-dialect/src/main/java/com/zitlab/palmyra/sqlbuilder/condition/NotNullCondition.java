@@ -15,22 +15,40 @@
  ******************************************************************************/
 package com.zitlab.palmyra.sqlbuilder.condition;
 
+import java.util.List;
+
 import com.zitlab.palmyra.sqlbuilder.query.Column;
 import com.zitlab.palmyra.sqlbuilder.query.Table;
 
-public class NotNullCondition extends Condition{
+public class NotNullCondition extends ColumnCondition{
 	private String field;
 
+	public NotNullCondition(String attribute,String field) {
+		super(attribute);
+		this.field = field;
+	}
 	public NotNullCondition(String field) {
+		super(null);
 		this.field = field;
 	}
 	
+	public NotNullCondition(String attribute,Table<? extends Column> table, String field) {
+		super(attribute,table,field);
+		this.field = getColumnAlias(table, field);
+	}
 	public NotNullCondition(Table<? extends Column> table, String field) {
+		super(null,table,field);
 		this.field = getColumnAlias(table, field);
 	}
 	
 	@Override
 	public void append(StringBuilder sb) {
 		sb.append(" ").append(field).append(" IS NOT NULL");
+	}
+
+	@Override
+	public void appendValue(List<Object> valueList) {
+		// TODO Auto-generated method stub
+		
 	}	
 }
