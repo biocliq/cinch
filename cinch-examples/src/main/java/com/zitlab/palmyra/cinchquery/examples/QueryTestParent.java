@@ -12,23 +12,22 @@ import com.zitlab.palmyra.cinch.tuple.dao.TupleDao;
 import com.zitlab.palmyra.core.config.DsProvider;
 import com.zitlab.palmyra.core.config.TupleDaoProvider;
 
-public class QueryCustomCondition {
+public class QueryTestParent {
 	public static List<Tuple> queryData() throws SQLException {
 		DataSource dataSource = DsProvider.getDataSource();		
 		TupleDao tupleDao = TupleDaoProvider.getDataAccessObject(dataSource);	
 		QueryFilter filter=new QueryFilter();
-		filter.sqlExpression("name = 'John' and age > '18'");
-		List<Tuple> tuple = tupleDao.list("Customer",filter);				
+		filter.addCondition(new ConditionBuilder().equals("categoryId.categoryName","cat2").build());
+		//filter.setFields("categoryName");
+		List<Tuple> tuple = tupleDao.list("Product",filter);				
 		return tuple;
 
 	}
 
 	public static void main(String args[]) throws SQLException {
 		List<Tuple> tuple = queryData();
-		if(tuple.size()>0)
-			System.out.println(tuple.get(0).getAttribute("name"));
-		else
-			System.out.println("Record is empty");
+		if(tuple.size() > 0)
+		System.out.println(tuple.get(0).getAttribute("name"));
 	
 	}
 }

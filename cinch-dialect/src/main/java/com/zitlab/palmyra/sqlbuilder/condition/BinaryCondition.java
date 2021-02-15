@@ -37,6 +37,17 @@ public class BinaryCondition extends ColumnCondition {
 		this.value = value;
 	}
 
+	public BinaryCondition(Operator operator, Table table,
+			String columnName) {
+		super(null,table,columnName);
+		this.operator=operator;
+	}
+
+	public BinaryCondition(Operator operator, String columnName) {
+		super(null,null,columnName);
+		this.operator=operator;
+	}
+
 	public Operator getOperator() {
 		return operator;
 	}
@@ -105,6 +116,11 @@ public class BinaryCondition extends ColumnCondition {
 	@Override
 	public void appendValue(List<Object> valueList) {
 		valueList.add(value);		
+	}
+
+	public static Condition equals(Table table, String columnName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

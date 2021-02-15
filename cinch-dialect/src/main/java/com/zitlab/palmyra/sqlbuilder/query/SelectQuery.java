@@ -22,9 +22,10 @@ import java.util.List;
 
 import com.zitlab.palmyra.sqlbuilder.condition.BinaryCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
-import com.zitlab.palmyra.sqlbuilder.condition.Condition;
-import com.zitlab.palmyra.sqlbuilder.condition.JoinType;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
+import com.zitlab.palmyra.sqlbuilder.condition.Condition;
+import com.zitlab.palmyra.sqlbuilder.condition.JoinCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.JoinType;
 import com.zitlab.palmyra.sqlbuilder.dialect.Dialect;
 
 public class SelectQuery<T extends Table<? extends Column>> extends Query<T> {
@@ -240,7 +241,7 @@ public class SelectQuery<T extends Table<? extends Column>> extends Query<T> {
 		for (int i = 0; i < colCount; i++) {
 			left = appendString(root.getQueryAlias(), '.', rootColumns.get(i));
 			right = appendString(subTable.getQueryAlias(), '.', subTableColumns.get(i));
-			cond.addCondition(BinaryCondition.equals(left, right));
+			cond.addCondition(new JoinCondition(left, right));
 		}
 		addJoin(key, subTable, JoinType.INNER_JOIN, cond);
 	}

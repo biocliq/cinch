@@ -40,7 +40,8 @@ public abstract class QueryHelper extends JoinHelper {
 		String sVal = null;
 		if (value instanceof String)
 			sVal = (String) value;
-		else
+//		elseaddCriteria(query, conditions,valueList, table, field, value);
+		
 			sVal = value.toString();
 
 		int len = sVal.length();

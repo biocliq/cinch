@@ -28,7 +28,7 @@ public class NullCondition extends ColumnCondition{
 		this.field = field;
 	}
 	public NullCondition(String field) {
-		super(null);
+		super(field);
 		this.field = field;
 	}
 	

@@ -28,7 +28,7 @@ public class NotNullCondition extends ColumnCondition{
 		this.field = field;
 	}
 	public NotNullCondition(String field) {
-		super(null);
+		super(field);
 		this.field = field;
 	}
 	

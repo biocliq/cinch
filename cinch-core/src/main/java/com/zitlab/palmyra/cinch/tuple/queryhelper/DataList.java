@@ -27,9 +27,9 @@ public class DataList extends ArrayList<Object> {
 	public boolean addAll(ArrayList<String> valueList) {
 		return super.addAll(valueList);
 	}
-	public boolean add(Object value) {
-		throw new UnsupportedOperationException("This method should not be used");
-	}
+//	public boolean add(Object value) {
+//		throw new UnsupportedOperationException("This method should not be used");
+//	}
 
 	public boolean addString(String value) {
 		return super.add(value);

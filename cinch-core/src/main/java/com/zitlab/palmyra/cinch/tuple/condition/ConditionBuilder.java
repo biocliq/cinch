@@ -9,6 +9,7 @@ import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.ComboCondition.Op;
 import com.zitlab.palmyra.sqlbuilder.condition.Condition;
 import com.zitlab.palmyra.sqlbuilder.condition.CustomCondition;
+import com.zitlab.palmyra.sqlbuilder.condition.InCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.NotNullCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.NullCondition;
 import com.zitlab.palmyra.sqlbuilder.condition.Operator;
@@ -94,6 +95,11 @@ public class ConditionBuilder {
 	}
 	public ConditionBuilder sqlExpression(String query) {
 		Condition condition = new CustomCondition(query);
+		this.conditions.addCondition(condition);
+		return this;
+	}
+	public ConditionBuilder isIn(String field,boolean negate,String ...values) {
+		Condition condition= new InCondition(field,negate,values);
 		this.conditions.addCondition(condition);
 		return this;
 	}

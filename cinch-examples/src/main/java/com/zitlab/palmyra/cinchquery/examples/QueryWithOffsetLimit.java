@@ -19,9 +19,9 @@ public class QueryWithOffsetLimit {
 		QueryFilter queryFilter = new QueryFilter();
 		//queryFilter.addCondition(" order_id = 1 and quantity > 2 ");	
 		queryFilter.setLimit(50);
-		queryFilter.setOffset(100);
+		queryFilter.setOffset(1);
 		
-		List<Tuple> tuples = tupleDao.list("Orderitem", queryFilter);
+		List<Tuple> tuples = tupleDao.list("Customer", queryFilter);
 		return tuples;
 
 	}

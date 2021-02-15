@@ -54,7 +54,7 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 			if (null != item) {
 				// TODO experminal added for inclusion of parent references
-				addQueryCriteria(type.getName(), item, type, query, rootTable, list);
+			//	addQueryCriteria(type.getName(), item, type, query, rootTable, list);
 			}
 		}
 		setAddlFilters(query, filter);
@@ -75,16 +75,17 @@ public class SelectQueryHelper extends AppendColumnHelper {
 
 	public QueryParams getSearchQuery(TupleType tupleType, QueryFilter filter) {
 
-		ComboCondition conditions = filter.getConditions();
+		
 		DataList valueList = new DataList();
 		Tuple item=filter.getCriteria();
 		String tableName = tupleType.getTable();
 		String reference = tupleType.getName();
 		Table rootTable = new Table(tupleType.getSchema(),tableName, reference);
 		SelectQuery<Table> query = new SelectQuery<Table>(rootTable, reference, getDialect());
-		
+		ComboCondition conditions=filter.getCondition();
 		//valueList.addAll(filter.getDataList());
-		addQueryCriteria(tupleType.getName(), conditions, tupleType, query, rootTable, valueList);
+		if(conditions.getConditions().size()>0)
+			addQueryCriteria(reference, conditions, tupleType, query, rootTable, valueList);
 		setAddlFilters(query, filter);
 		appendColumnsToSelect(query, tupleType, rootTable, filter);
 		addOrderClause(filter, tupleType, query);

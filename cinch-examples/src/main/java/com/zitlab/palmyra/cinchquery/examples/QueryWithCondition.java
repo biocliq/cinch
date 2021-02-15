@@ -17,9 +17,7 @@ public class QueryWithCondition {
 		DataSource dataSource = DsProvider.getDataSource();		
 		TupleDao tupleDao = TupleDaoProvider.getDataAccessObject(dataSource);	
 		QueryFilter filter=new QueryFilter();
-		filter.addCondition(new ConditionBuilder().and().greaterThan("age","18").equals("name", "Ram").build());
-	//	filter.addCondition(condition);
-		//filter.setFields("name","phoneno");
+		filter.addCondition(new ConditionBuilder().between("age","35","55").build());
 		List<Tuple> tuple = tupleDao.list("Customer",filter);				
 		return tuple;
 
@@ -27,7 +25,7 @@ public class QueryWithCondition {
 
 	public static void main(String args[]) throws SQLException {
 		List<Tuple> tuple = queryData();
-		System.out.println(tuple.get(0).getAttribute("name"));
+		System.out.println(tuple.size());
 	
 	}
 }

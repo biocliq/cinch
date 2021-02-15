@@ -32,8 +32,11 @@ public class QueryFilter extends SelectCriteria {
 	
 	//change to condition
 	public void addCondition(Condition condition) {
-		this.conditions.addCondition(condition);
+			this.conditions.addCondition(condition);
 				
+	}
+	public ComboCondition getCondition() {
+		return conditions;
 	}
 	public void addCriteria(String column, String condition) {
 		Tuple criteria = getCriteria();

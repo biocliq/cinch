@@ -158,6 +158,7 @@ public class TupleDao extends RecordDao {
 		QueryParams params = selectQueryHelper.getSearchQuery(tupleType, filter);
 		params.setExpectedResultSetSize(filter.getLimit());
 		List<Tuple> tuples = select(params, getHandler(tupleType, params.getTableLookup()));
+		
 		return tuples;
 	}
 

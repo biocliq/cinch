@@ -17,7 +17,7 @@ public class QuerytestNull {
 		DataSource dataSource = DsProvider.getDataSource();		
 		TupleDao tupleDao = TupleDaoProvider.getDataAccessObject(dataSource);	
 		QueryFilter queryFilter=new QueryFilter();
-		queryFilter.addCondition(new ConditionBuilder().and().isNull("phoneNo").isNotNull("name").build());
+		queryFilter.addCondition(new ConditionBuilder().and().isNull("phoneno").isNotNull("name").build());
 		List<Tuple> tuple = tupleDao.list("Customer",queryFilter);				
 		return tuple;
 

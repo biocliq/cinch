@@ -124,7 +124,7 @@ public abstract class RecordDao{
 	}
 	
 	public <T> List<T> select(NativeQuery params, ResultSetHandler<T> handler) {
-		Query query = factory.createQuery(params.getQuery(), params.getParams());		
+ 		Query query = factory.createQuery(params.getQuery(), params.getParams());		
 		return query.executeAndFetch(handler);
 	}
 	
