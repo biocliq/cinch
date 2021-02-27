@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.core.net.Rfc1349TrafficClass;
-
 import com.zitlab.palmyra.cinch.dbmeta.ForeignKey;
 import com.zitlab.palmyra.cinch.dbmeta.TupleAttribute;
 import com.zitlab.palmyra.cinch.dbmeta.TupleType;

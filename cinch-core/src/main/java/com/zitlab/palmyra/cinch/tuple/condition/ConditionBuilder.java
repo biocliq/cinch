@@ -98,7 +98,7 @@ public class ConditionBuilder {
 		this.conditions.addCondition(condition);
 		return this;
 	}
-	public ConditionBuilder isIn(String field,boolean negate,String ...values) {
+	public ConditionBuilder isIn(String field,boolean negate,Object ...values) {
 		Condition condition= new InCondition(field,negate,values);
 		this.conditions.addCondition(condition);
 		return this;
